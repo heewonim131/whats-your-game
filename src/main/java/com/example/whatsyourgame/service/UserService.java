@@ -42,4 +42,12 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
+    // 회원가입 후 자동 로그인
+    public void login(User user) {
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+                user.getName(), user.getPassword(),
+                List.of(new SimpleGrantedAuthority("USER")));
+        SecurityContextHolder.getContext().setAuthentication(token);
+    }
+
 }
