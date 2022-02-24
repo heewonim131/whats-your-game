@@ -24,6 +24,7 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+
     public PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
@@ -54,4 +55,13 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(email);
     }
 
+    // 로그인 시 암호화된 비밀번호 비교
+    public boolean loginCheck(User user) {
+        if (!userRepository.findByEmail(user.getEmail()).isEmpty()) {
+            User actUser = userRepository.findByEmail(user.getEmail()).get();
+            return getPasswordEncoder().matches(
+                    getPasswordEncoder().encode(user.getPassword()),
+                    actUser.getPassword());
+        } else return false;
+    }
 }

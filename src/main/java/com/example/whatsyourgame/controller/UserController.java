@@ -6,8 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
-
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/users")
@@ -32,6 +30,17 @@ public class UserController {
     public int emailDuplicateCheck(@RequestParam("email") String email) {
         if (userService.findUser(email).isEmpty()) return 1;
         else return 0;
+    }
+
+    @PostMapping("login")
+    public String login(User user) {
+        if (userService.loginCheck(user)) return "redirect:/";
+        else return "login-error";
+    }
+
+    @GetMapping("login-error")
+    public String loginError(){
+        return "login-error";
     }
 
 }
