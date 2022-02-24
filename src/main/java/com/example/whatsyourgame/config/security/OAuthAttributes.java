@@ -23,10 +23,24 @@ public class OAuthAttributes {
     }
 
     public static OAuthAttributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
+        // 네이버
+        if("naver".equals(registrationId)){
+            return ofNaver("id", attributes);
+        }
         // 구글
         return ofGoogle(userNameAttributeName, attributes);
     }
 
+    // 네이버
+    private static OAuthAttributes ofNaver(String userNameAttributeName, Map<String, Object> attributes) {
+        Map<String, Object> response = (Map<String, Object>)attributes.get("response");
+        return OAuthAttributes.builder()
+                .name((String) response.get("nickname"))
+                .email((String) response.get("email"))
+                .attributes(response)
+                .nameAttributeKey(userNameAttributeName)
+                .build();
+    }
     // 구글
     private static OAuthAttributes ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {
         return OAuthAttributes.builder()
