@@ -50,4 +50,8 @@ public class UserService implements UserDetailsService {
         SecurityContextHolder.getContext().setAuthentication(token);
     }
 
+    public Optional<User> findUser(String email) {
+        return userRepository.findByEmail(email);
+    }
+
 }

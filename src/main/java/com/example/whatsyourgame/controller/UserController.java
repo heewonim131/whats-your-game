@@ -27,4 +27,11 @@ public class UserController {
         return "redirect:/";
     }
 
+    @ResponseBody
+    @PostMapping("emailDuplicateCheck")
+    public int emailDuplicateCheck(@RequestParam("email") String email) {
+        if (userService.findUser(email).isEmpty()) return 1;
+        else return 0;
+    }
+
 }

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layout/basic">
+<th:block layout:fragment="title">
+    <title>로그인 | What's Your Game?</title>
+</th:block>
+
+<th:block layout:fragment="content">
+
+<div class="container-login" id="container-login">
+    <div class="form-container sign-up-container">
+        <form method="post" class="form-login" th:action="@{/users}">
+            <h1>회원가입</h1>
+            <div class="social-container">
+                <a href="/oauth2/authorization/kakao" class="a-login"><img th:src="@{/images/login-kakao.png}"></a>
+                <a href="/oauth2/authorization/naver" class="a-login"><img th:src="@{/images/login-naver.png}"></a>
+                <a href="/oauth2/authorization/google" class="a-login"><img th:src="@{/images/login-google.png}"></a>
+            </div>
+            <span>이메일로 회원가입</span>
+            <input type="text" name="name" placeholder="닉네임" class="input-login"/>
+            <input type="email" name="email" placeholder="이메일" class="input-login"/>
+            <input type="password" name="password" placeholder="비밀번호" class="input-login"/>
+            <input type="password" placeholder="비밀번호 확인" class="input-login"/>
+            <button type="submit" class="btn-login">회원가입</button>
+        </form>
+    </div>
+    <div class="form-container sign-in-container">
+        <form method="post" class="form-login" th:action="@{/users/login}">
+            <h1>로그인</h1>
+            <div class="social-container">
+                <a href="/oauth2/authorization/kakao" class="a-login"><img th:src="@{/images/login-kakao.png}"></a>
+                <a href="/oauth2/authorization/naver" class="a-login"><img th:src="@{/images/login-naver.png}"></a>
+                <a href="/oauth2/authorization/google" class="a-login"><img th:src="@{/images/login-google.png}"></a>
+            </div>
+            <span>이메일로 로그인</span>
+            <input type="text" name="username" placeholder="이메일" class="input-login"/>
+            <input type="password" name="password" placeholder="비밀번호" class="input-login"/>
+            <div class="error-message" style="color: #FF4B2B;">
+                <span> 이메일 또는 비밀번호가 올바르지 않습니다. </span>
+            </div>
+            <div class="checkbox mb-3" style="font-size: 14px;">
+                <label>
+                    <input type="checkbox" name="remember-me" style="cursor: pointer;"> 로그인 기억하기
+                </label>
+            </div>
+            <a href="#" class="a-login">비밀번호를 잊으셨나요?</a>
+            <button type="submit" class="btn-login">로그인</button>
+        </form>
+    </div>
+    <div class="overlay-container">
+        <div class="overlay">
+            <div class="overlay-panel overlay-left">
+                <h2>이미 회원이신가요?</h2>
+                <button class="ghost btn-login" id="signIn">로그인 하기</button>
+            </div>
+            <div class="overlay-panel overlay-right">
+                <h2>회원이 아니신가요?</h2>
+                <button class="ghost btn-login" id="signUp">회원가입 하기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
+    <script>
+        const signUpButton = document.getElementById('signUp');
+        const signInButton = document.getElementById('signIn');
+        const container = document.getElementById('container-login');
+
+        signUpButton.addEventListener('click', () => {
+            container.classList.add("right-panel-active");
+        });
+
+        signInButton.addEventListener('click', () => {
+            container.classList.remove("right-panel-active");
+        });
+    </script>
+
+    <script>
+        // 닉네임 정규식 체크
+        var nameJ = /^[a-z0-9가-힣]{2,8}$/;
+        $("#name").blur(function (){
+            if (nameJ.test($("#name").val())) {
+                $(".nameValid").text(''); }
+            else if ($("#name").val() == "") {
+                $(".nameValid").text("닉네임을 입력해주세요.");
+                $(".nameValid").css("color", "red"); }
+            else {
+                $(".nameValid").text("2-8자의 한글, 영문, 숫자만 사용 가능합니다.");
+                $(".nameValid").css("color", "red"); }
+        });
+
+        // 이메일 유효성 검사
+        var emailJ = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+        $("#email").blur(function (){
+            // 이메일 정규식 체크
+            if (emailJ.test($("#email").val())) {
+                // 이메일 중복 체크
+                $.ajax({
+                    type : 'POST',
+                    url : "/users/emailDuplicateCheck",
+                    data : {email : $("#email").val()},
+                    success : function(result) {
+                        if (result == 1) {
+                            $(".emailValid").text('');
+                        } else {
+                            $(".emailValid").text("이미 사용중인 이메일입니다.");
+                            $(".emailValid").css("color", "red"); }
+                    }
+                });
+            }
+            else if ($("#email").val() == "") {
+                $(".emailValid").text("이메일을 입력해주세요.");
+                $(".emailValid").css("color", "red"); }
+            else {
+                $(".emailValid").text("이메일 형식을 확인해주세요.");
+                $(".emailValid").css("color", "red"); }
+        });
+
+        // 비밀번호 정규식 체크
+        var pwJ = /^[A-Za-z0-9]{8,12}$/;
+        $("#password").blur(function (){
+            if (pwJ.test($("#password").val())) {
+                $(".passwordValid").text(''); }
+            else if ($("#password").val() == "") {
+                $(".passwordValid").text("비밀번호를 입력해주세요.");
+                $(".passwordValid").css("color", "red"); }
+            else {
+                $(".passwordValid").text("8-12자의 영문 대소문자, 숫자만 사용 가능합니다.");
+                $(".passwordValid").css("color", "red"); }
+        });
+
+        // 비밀번호 일치 확인
+        $("#passwordRpt").blur(function(){
+            if ($("#passwordRpt").val() == $("#password").val()) {
+                $(".passwordMatch").text(''); }
+            else { $(".passwordMatch").text("비밀번호가 일치하지 않습니다.");
+                $(".passwordMatch").css("color", "red"); }
+        });
+
+        // 회원가입 폼 검사
+        function checkForm() {
+            if (!nameJ.test($("#name").val())) {
+                alert("닉네임을 확인해주세요.");
+                return false;
+            } else if (!emailJ.test($("#email").val())) {
+                alert("이메일을 확인해주세요.");
+                return false;
+            } else if (!pwJ.test($("#password").val())) {
+                alert("비밀번호를 확인해주세요.");
+                return false;
+            } else if ($("#passwordRpt").val() != $("#password").val()) {
+                alert("비밀번호를 확인해주세요.");
+                return false;
+            }
+            $.ajax({
+                type: 'POST',
+                url: "/users/emailDuplicateCheck",
+                data: {email: $("#email").val()},
+                success: function (result) {
+                    if (result == 1) {
+                        $(".emailValid").text('');
+                    } else {
+                        alert("이메일을 확인해주세요.");
+                        return false;
+                    }
+                }
+            });
+            alert("회원가입이 완료되었습니다.");
+        }
+    </script>
+
+</th:block>
+
+</html>
