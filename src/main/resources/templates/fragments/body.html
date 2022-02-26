@@ -9,34 +9,36 @@
     <nav class="fh5co-nav" role="navigation">
         <div class="container">
             <div class="row">
-                <div class="col-md-3 col-xs-2">
-                    <div id="fh5co-logo"><a href="index.html">Shop.</a></div>
+                <div class="col-md-4 col-xs-4">
+                    <div id="fh5co-logo"><a href="/">What's&nbsp;your&nbsp;game?</a></div>
                 </div>
-                <div class="col-md-6 col-xs-6 text-center menu-1">
+                <div class="col-md-4 col-xs-4 text-center menu-1">
                     <ul>
                         <li class="has-dropdown">
-                            <a href="product.html">Shop</a>
+                            <a href="/games">GAMES</a>
                             <ul class="dropdown">
-                                <li><a href="single.html">Single Shop</a></li>
+                                <li><a href="#">인기 게임</a></li>
+                                <li><a href="#">신작 게임</a></li>
+                                <li><a href="#">전체 게임</a></li>
                             </ul>
                         </li>
-                        <li><a href="about.html">About</a></li>
                         <li class="has-dropdown">
-                            <a href="services.html">Services</a>
+                            <a href="/reviews">REVIEWS</a>
                             <ul class="dropdown">
-                                <li><a href="#">Web Design</a></li>
-                                <li><a href="#">eCommerce</a></li>
-                                <li><a href="#">Branding</a></li>
-                                <li><a href="#">API</a></li>
+                                <li><a href="#">인기 리뷰</a></li>
+                                <li><a href="#">신작 리뷰</a></li>
+                                <li><a href="#">전체 리뷰</a></li>
                             </ul>
                         </li>
-                        <li sec:authorize="isAuthenticated()"><a href="/users/${userId}" th:text="|My page|"></a></li>
+                        <li>
+                            <a href="/users/mypage" th:text="|MY PAGE|"></a>
+                        </li>
                     </ul>
                 </div>
-                <div class="col-md-3 col-xs-4 text-right hidden-xs menu-2">
+                <div class="col-md-4 col-xs-4 text-right hidden-xs menu-2">
                     <ul>
-                        <li sec:authorize="!isAuthenticated()"><a href="/users" th:text="Login"></a></li>
-                        <li sec:authorize="isAuthenticated()"><a href="/users/logout" th:text="Logout"></a></li>
+                        <li sec:authorize="!isAuthenticated()"><a href="/users" th:text="LOGIN"></a></li>
+                        <li sec:authorize="isAuthenticated()"><a href="/users/logout" th:text="LOGOUT"></a></li>
                         <li class="search">
                             <div class="input-group">
                                 <input type="text" placeholder="Search">
@@ -48,7 +50,6 @@
                     </ul>
                 </div>
             </div>
-
         </div>
     </nav>
 
