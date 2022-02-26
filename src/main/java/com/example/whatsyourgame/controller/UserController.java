@@ -4,13 +4,18 @@ import com.example.whatsyourgame.entity.User;
 import com.example.whatsyourgame.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
+import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 
+    private final HttpSession httpSession;
     private final UserService userService;
 
     @GetMapping("")
@@ -41,6 +46,20 @@ public class UserController {
     @GetMapping("login-error")
     public String loginError(){
         return "login-error";
+    }
+
+    @GetMapping("mypage")
+    public String mypage(Principal principal, Model model) {
+        User user = (User) httpSession.getAttribute("user");
+        if (user != null) {
+            model.addAttribute("userName", user.getName());
+            return "mypage";
+        }
+        else if (principal != null) {
+            model.addAttribute("userName", principal.getName());
+            return "mypage";
+        }
+        else return "login-form";
     }
 
 }

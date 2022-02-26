@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +25,7 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+    private HttpSession httpSession;
 
     public PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder();
@@ -63,5 +65,9 @@ public class UserService implements UserDetailsService {
                     getPasswordEncoder().encode(user.getPassword()),
                     actUser.getPassword());
         } else return false;
+    }
+
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
     }
 }

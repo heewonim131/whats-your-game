@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layout/basic">
+<th:block layout:fragment="title">
+    <title>마이페이지 | What's Your Game?</title>
+</th:block>
+
+<th:block layout:fragment="content">
+    <div class="container">
+        <div class="row-mypage">
+            <div class="col-md-4 animate-box fadeInUp animated-fast">
+                <div class="fh5co-contact-info">
+                    <h3>닉네임</h3>
+                </div>
+            </div>
+            <div class="col-md-6 animate-box fadeInUp animated-fast">
+                <input type="text" placeholder="닉네임" name="name" th:value="${userName}" class="input-mypage">
+                <button class="btn btn-primary">수정</button>
+            </div>
+        </div>
+        <div id="fh5co-product">
+            <div class="col-md-12 animate-box fadeInUp animated-fast">
+                <div class="fh5co-contact-info">
+                    <h3>찜한 게임</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 text-center animate-box fadeInUp animated-fast">
+                    <div class="product">
+                        <a href="single.html" class="icon">
+                        <div class="product-grid" style="background-image:url(images/product-4.jpg);">
+                        </div>
+                        </a>
+                        <div class="desc">
+                            <h3><a href="single.html">Alato Cabinet</a></h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center animate-box fadeInUp animated-fast">
+                    <div class="product">
+                        <a href="single.html" class="icon">
+                        <div class="product-grid" style="background-image:url(images/product-5.jpg);">
+                        </div>
+                        </a>
+                        <div class="desc">
+                            <h3><a href="single.html">Earing Wireless</a></h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center animate-box fadeInUp animated-fast">
+                    <div class="product">
+                        <a href="single.html" class="icon">
+                        <div class="product-grid" style="background-image:url(images/product-6.jpg);">
+                        </div>
+                        </a>
+                        <div class="desc">
+                            <h3><a href="single.html">Sculptural Coffee Table</a></h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 text-center animate-box fadeInUp animated-fast">
+                    <div class="product">
+                        <a href="single.html" class="icon">
+                        <div class="product-grid" style="background-image:url(images/product-7.jpg);">
+                        </div>
+                        </a>
+                        <div class="desc">
+                            <h3><a href="single.html">The WW Chair</a></h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center animate-box fadeInUp animated-fast">
+                    <div class="product">
+                        <a href="single.html" class="icon">
+                        <div class="product-grid" style="background-image:url(images/product-8.jpg);">
+                        </div>
+                        </a>
+                        <div class="desc">
+                            <h3><a href="single.html">Himitsu Money Box</a></h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center animate-box fadeInUp animated-fast">
+                    <div class="product">
+                        <a href="single.html" class="icon">
+                            <div class="product-grid" style="background-image:url(images/product-9.jpg);">
+                        </div>
+                        </a>
+                        <div class="desc">
+                            <h3><a href="single.html">Ariane Prin</a></h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</th:block>
+
+</html>

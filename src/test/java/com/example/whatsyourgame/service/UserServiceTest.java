@@ -15,6 +15,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Optional;
+
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
@@ -47,4 +49,21 @@ public class UserServiceTest {
                 .matches("12345678", result.getPassword()));
     }
 
+    @Test
+    void findByEmail() {
+        User user = User.builder()
+                .name("user")
+                .email("user@test.com")
+                .password("12345678")
+                .build();
+
+        when(this.userRepository.findByEmail(user.getEmail()))
+                .thenReturn(Optional.of(user));
+
+        User result = this.userService.findUser(user.getEmail()).get();
+
+        assertEquals("user",  result.getName());
+        assertEquals("user@test.com",  result.getEmail());
+        assertEquals("12345678",  result.getPassword());
+    }
 }
