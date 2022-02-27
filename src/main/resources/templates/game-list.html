@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layout/basic">
+<th:block layout:fragment="title">
+    <title>마이페이지 | What's Your Game?</title>
+</th:block>
+
+<th:block layout:fragment="content">
+    <div class="container">
+        <div id="fh5co-product">
+            <div class="col-md-12 animate-box fadeInUp animated-fast">
+                <div class="fh5co-contact-info">
+                    <h3>전체 게임</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 text-center animate-box fadeInUp animated-fast" th:each="game: ${gameList}">
+                    <div class="product">
+                        <a href="single.html" class="icon">
+                            <div class="product-grid" th:style="'background-image:url('+${game.img}+');'">
+                            </div>
+                        </a>
+                        <div class="desc">
+                            <h3 th:text="${game.name}"><a href="single.html">게임 제목</a></h3>
+                            <span th:text="${game.genre}+' | '+${game.platform}+' | '+'게임사'">장르 | 플랫폼 | 게임사</span><br>
+                            <span class="price">별점(리뷰)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</th:block>
+
+</html>
