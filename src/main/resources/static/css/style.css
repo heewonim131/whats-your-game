@@ -22,6 +22,7 @@ body {
 #page {
   position: relative;
   overflow-x: hidden;
+  overflow-y: clip;
   width: 100%;
   height: 100%;
   -webkit-transition: 0.5s;
@@ -977,9 +978,6 @@ h1, h2, h3, h4, h5, h6, figure {
   display: inline-block;
   padding-right: 20px;
 }
-.fh5co-tabs .fh5co-tab-content-wrap .feed > div .rate {
-  color: #ffba00;
-}
 .fh5co-tabs .icon-xlg {
   font-size: 400px;
   margin-bottom: 30px;
@@ -1894,4 +1892,60 @@ button.ghost {
 }
 .fh5co-contact-info {
   margin-bottom: 50px !important;
+}
+.product-grid.product-details {
+  height: 400px !important;
+}
+.game-desc.col-md-4.animate-box.fadeInUp.animated-fast {
+  margin-left: 20px;
+}
+.rate {
+  color: #ffba00;
+}
+.row.fh5co-tab-content.tab-content.active.fadeIn.animated-fast {
+  margin-top: 40px;
+}
+.col-md-12.game-info-name {
+  margin-left: 15px;
+}
+.col-md-12.game-info {
+  margin-top: 15px;
+}
+.modal-header .close {
+  margin: 2px 5px;
+}
+.modal-body {
+  padding: 20px;
+}
+/* 리뷰 등록 별점 */
+.star-rating {
+  display: flex;
+  flex-direction: row-reverse;
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  justify-content: space-around;
+  padding: 0 0.2em;
+  text-align: center;
+  width: 5em;
+}
+
+.star-rating input {
+  display: none;
+}
+
+.star-rating label {
+  -webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: 0.3px;
+  -webkit-text-stroke-color: #2b2a29;
+  cursor: pointer;
+  padding-left: 2px;
+}
+
+.star-rating :checked ~ label {
+  -webkit-text-fill-color: gold;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  -webkit-text-fill-color: #fff58c;
 }
