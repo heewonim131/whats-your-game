@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -34,10 +35,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().disable();
 
         http
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
+
+        http
                 .authorizeRequests(request->
-                                request.antMatchers("/**").permitAll()
-//                              .antMatchers("/", "/css/**", "/fonts/**", "/images/**", "/js/**", "/sass/**").permitAll()
-//                              .antMatchers("/games").hasRole(Role.USER.name())
+//                                request.antMatchers("/**").permitAll()
+                                request
+                                        .antMatchers("/", "/css/**", "/fonts/**", "/images/**", "/js/**", "/sass/**").permitAll()
+                                        .antMatchers("/users", "/users/login", "/users/login-error").permitAll()
+                                        .antMatchers("/game/**").permitAll()
+                                        .antMatchers("/users/mypage").hasRole("USER")
                                 .anyRequest().authenticated()
                 )
                 .formLogin(login->

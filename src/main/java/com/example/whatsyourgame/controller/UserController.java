@@ -33,8 +33,7 @@ public class UserController {
     @ResponseBody
     @PostMapping("emailDuplicateCheck")
     public int emailDuplicateCheck(@RequestParam("email") String email) {
-        if (userService.findUser(email).isEmpty()) return 1;
-        else return 0;
+        return userService.emailDuplicateCheck(email);
     }
 
     @PostMapping("login")
@@ -49,17 +48,10 @@ public class UserController {
     }
 
     @GetMapping("mypage")
-    public String mypage(Principal principal, Model model) {
-        User user = (User) httpSession.getAttribute("user");
-        if (user != null) {
-            model.addAttribute("userName", user.getName());
-            return "mypage";
-        }
-        else if (principal != null) {
-            model.addAttribute("userName", principal.getName());
-            return "mypage";
-        }
-        else return "login-form";
+    public String mypage(Model model) {
+        User user = userService.currentLoginUser();
+        model.addAttribute("userName", user.getName());
+        return "mypage";
     }
 
 }
