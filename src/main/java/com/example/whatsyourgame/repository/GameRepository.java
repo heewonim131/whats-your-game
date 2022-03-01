@@ -13,8 +13,6 @@ import java.util.Optional;
 @Repository
 public interface GameRepository extends JpaRepository<Game, Long> {
 
-//    List<Game> findTop4OrderByReleasedAtDesc();
-
     @Query(value = "select * from game order by released_at desc limit 4;", nativeQuery = true)
     List<Game> findLatestTop4();
 
