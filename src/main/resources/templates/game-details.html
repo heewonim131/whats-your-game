@@ -19,9 +19,9 @@
                 <div class="row animate-box fadeInUp animated-fast">
                 <div class="col-md-12 game-info-name">
                     <h2 th:text="${game.name}">게임 제목</h2>
-                    <p>
-                        <a data-toggle="modal" href="#registerModal" class="btn btn-primary btn-outline">Wish</a>
-                    </p>
+                    <a sec:authorize="isAuthenticated()" data-toggle="modal" href="#" class="btn btn-primary btn-outline">
+                        <i class="icon-heart"></i>
+                    </a>
                 </div>
             </div>
                 <div class="row">
@@ -50,20 +50,19 @@
             </div>
 
             <div class="row fh5co-tab-content tab-content active fadeIn animated-fast">
-                <div class="col-md-12 col-xs-12 col-md-offset-1">
+                <div class="col-md-12 col-xs-12 col-md-offset-1 review-header">
                     <h3 class="col-md-6 col-xs-8
                         ">REVIEWS</h3>
-                    <a data-toggle="modal" href="#registerModal" class="col-md-2 col-xs-offset-1 btn btn-primary btn-outline">Wish</a>
+                    <a sec:authorize="isAuthenticated()" data-toggle="modal" href="#registerModal" class="col-md-2 col-xs-offset-1 btn btn-primary btn-outline">작성</a>
                 </div>
-                <div class="col-md-10 col-xs-10 col-md-offset-1">
-                    <div class="col-md-10 col-xs-10 feed">
-                        <div>
-                            <p>재밌고 재밌어요</p>
-                            <span>hee</span>
+                <div class="col-md-10 col-xs-10 col-md-offset-1 review-body">
+                    <div class="col-md-10 col-xs-10 review-card" th:each="review: ${reviews}">
+                            <p th:text="${review.title}">리뷰 제목</p>
+                            <p th:text="${review.content}">리뷰 내용</p>
+                            <span th:text="${review.user.name}">리뷰 작성자</span>
                             <small class="rate">
-                                <i class="icon-star2"></i><i class="icon-star2"></i><i class="icon-star2"></i><i class="icon-star2"></i>
+                                <i class="icon-star2" th:each="num: ${#numbers.sequence(1, review.score)}"></i>
                             </small>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -73,40 +72,41 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <span class="modal-title" id="modal">리뷰 등록하기</span>
+                        <span class="modal-title" id="modal">리뷰 작성</span>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form th:action="'@{/games/'+${game.id}+'/review}'" method="post">
+                        <form id="reviewForm" method="post" th:action="@{'/games/'+${game.id}+'/reviews'}">
+                            <input type="hidden" id="gameId" th:value="${game.id}">
                             <div class="form-group">
                                 <label>별점</label>
                                 <div class="star-rating space-x-4 mx-auto">
-                                    <input type="radio" id="5-stars" name="reviewScore" value="5" v-model="ratings"/>
+                                    <input type="radio" id="5-stars" name="score" value="5" v-model="ratings"/>
                                     <label for="5-stars" class="star pr-4">★</label>
-                                    <input type="radio" id="4-stars" name="reviewScore" value="4" v-model="ratings"/>
+                                    <input type="radio" id="4-stars" name="score" value="4" v-model="ratings"/>
                                     <label for="4-stars" class="star">★</label>
-                                    <input type="radio" id="3-stars" name="reviewScore" value="3" v-model="ratings"/>
+                                    <input type="radio" id="3-stars" name="score" value="3" v-model="ratings"/>
                                     <label for="3-stars" class="star">★</label>
-                                    <input type="radio" id="2-stars" name="reviewScore" value="2" v-model="ratings"/>
+                                    <input type="radio" id="2-stars" name="score" value="2" v-model="ratings"/>
                                     <label for="2-stars" class="star">★</label>
-                                    <input type="radio" id="1-star" name="reviewScore" value="1" v-model="ratings" />
+                                    <input type="radio" id="1-star" name="score" value="1" v-model="ratings" />
                                     <label for="1-star" class="star">★</label>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label>제목</label>
-                                <input type="text" name="reviewTitle" class="form-control" maxlength="30">
+                                <input id="title" type="text" name="title" class="form-control" maxlength="30">
                             </div>
                             <div class="form-group">
                                 <label>내용</label>
-                                <textarea name="reviewContent" class="form-control" maxlength="2048" style="height: 161px; width: 100%;"></textarea>
+                                <textarea id="content" name="content" class="form-control" maxlength="2048" style="height: 161px; width: 100%;"></textarea>
                             </div>
 
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-                                <button type="submit" class="btn btn-primary">등록하기</button>
+                                <button type="button" class="btn btn-primary" onclick="checkReviewForm();">등록하기</button>
                             </div>
                         </form>
                     </div>
@@ -114,6 +114,40 @@
             </div>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script>
+        function checkReviewForm() {
+            var score = $("input[name=score]:checked").val();
+            if (score == undefined) {
+                alert("별점을 입력해주세요.");
+                return false;
+            } else if ($("#title").val() == "") {
+                alert("제목을 입력해주세요.");
+                return false;
+            } else if ($("#content").val() == "") {
+                alert("내용을 입력해주세요.");
+                return false;
+            }
+            $.ajax({
+                type: 'POST',
+                url: "/games/"+$("#gameId").val()+"/reviewDuplicateCheck",
+                data: {
+                    gameId: $("#gameId").val()
+                },
+                success: function (result) {
+                    if (result == 1) {
+                        alert("작성하신 리뷰가 등록되었습니다.");
+                        $("#reviewForm").submit();
+                    } else {
+                        alert("이미 리뷰를 작성하셨습니다.");
+                    }
+                }
+            });
+            return false;
+        }
+    </script>
+
 </th:block>
 
 </html>

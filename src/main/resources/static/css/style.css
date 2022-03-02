@@ -1949,3 +1949,6 @@ button.ghost {
 .star-rating label:hover ~ label {
   -webkit-text-fill-color: #fff58c;
 }
+.review-header h3 {
+  margin: 10px auto;
+}
