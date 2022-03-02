@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="/layout/basic" xmlns:sec="http://www.w3.org/1999/xhtml">
+      layout:decorate="/layout/basic" xmlns:sec="http://www.w3.org/1999/xhtml"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.ultraq.net.nz/thymeleaf/layout">
 <th:block layout:fragment="title">
     <title th:text="${game.name}+' | What\'s Your Game?'">What's Your Game?</title>
 </th:block>
@@ -16,53 +18,70 @@
                     </div>
                 </div>
                 <div class="game-desc col-md-4 animate-box fadeInUp animated-fast">
-                <div class="row animate-box fadeInUp animated-fast">
-                <div class="col-md-12 game-info-name">
-                    <h2 th:text="${game.name}">게임 제목</h2>
-                    <a sec:authorize="isAuthenticated()" data-toggle="modal" href="#" class="btn btn-primary btn-outline">
-                        <i class="icon-heart"></i>
-                    </a>
+                    <div class="row animate-box fadeInUp animated-fast">
+                        <div class="col-md-12 game-info-name">
+                            <h2 th:text="${game.name}">게임 제목</h2>
+                            <a sec:authorize="isAuthenticated()" data-toggle="modal" href="#"
+                               class="btn btn-primary btn-outline">
+                                <i class="icon-heart"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-xs-12 game-info">
+                            <div class="col-md-4 col-xs-4">장르</div>
+                            <div class="col-md-8 col-xs-8" th:text="${game.genre}">장르</div>
+                        </div>
+                        <div class="col-md-12 col-xs-12 game-info">
+                            <div class="col-md-4 col-xs-4">플랫폼</div>
+                            <div class="col-md-8 col-xs-8" th:text="${game.platform}">플랫폼</div>
+                        </div>
+                        <div class="col-md-12 col-xs-12 game-info">
+                            <div class="col-md-4 col-xs-4">게임사</div>
+                            <div class="col-md-8 col-xs-8" th:text="${game.platform}">게임사</div>
+                        </div>
+                        <div class="col-md-12 col-xs-12 game-info">
+                            <div class="col-md-4 col-xs-4">출시일</div>
+                            <div class="col-md-8 col-xs-8" th:text="${game.releasedAt}">출시일</div>
+                        </div>
+                        <div class="col-md-12 col-xs-12 game-info">
+                            <div class="col-md-4 col-xs-4">사이트</div>
+                            <div class="col-md-8 col-xs-8" th:text="${game.site}">사이트</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-                <div class="row">
-                    <div class="col-md-12 col-xs-12 game-info">
-                        <div class="col-md-4 col-xs-4">장르</div>
-                        <div class="col-md-8 col-xs-8" th:text="${game.genre}">장르</div>
-                    </div>
-                    <div class="col-md-12 col-xs-12 game-info">
-                        <div class="col-md-4 col-xs-4">플랫폼</div>
-                        <div class="col-md-8 col-xs-8" th:text="${game.platform}">플랫폼</div>
-                    </div>
-                    <div class="col-md-12 col-xs-12 game-info">
-                        <div class="col-md-4 col-xs-4">게임사</div>
-                        <div class="col-md-8 col-xs-8" th:text="${game.platform}">게임사</div>
-                    </div>
-                    <div class="col-md-12 col-xs-12 game-info">
-                        <div class="col-md-4 col-xs-4">출시일</div>
-                        <div class="col-md-8 col-xs-8" th:text="${game.releasedAt}">출시일</div>
-                    </div>
-                    <div class="col-md-12 col-xs-12 game-info">
-                        <div class="col-md-4 col-xs-4">사이트</div>
-                        <div class="col-md-8 col-xs-8" th:text="${game.site}">사이트</div>
-                    </div>
-                </div>
-            </div>
             </div>
 
             <div class="row fh5co-tab-content tab-content active fadeIn animated-fast">
                 <div class="col-md-12 col-xs-12 col-md-offset-1 review-header">
-                    <h3 class="col-md-6 col-xs-8
-                        ">REVIEWS</h3>
-                    <a sec:authorize="isAuthenticated()" data-toggle="modal" href="#registerModal" class="col-md-2 col-xs-offset-1 btn btn-primary btn-outline">작성</a>
+                    <h3 class="col-md-7 col-xs-8">REVIEWS</h3>
+                    <a sec:authorize="isAuthenticated()" data-toggle="modal" href="#registerModal"
+                       class="col-md-2 col-xs-offset-1 btn btn-primary btn-outline">작성</a>
                 </div>
-                <div class="col-md-10 col-xs-10 col-md-offset-1 review-body">
+
+                <div class="col-md-12 col-xs-12 col-md-offset-1 review-body">
                     <div class="col-md-10 col-xs-10 review-card" th:each="review: ${reviews}">
-                            <p th:text="${review.title}">리뷰 제목</p>
-                            <p th:text="${review.content}">리뷰 내용</p>
-                            <span th:text="${review.user.name}">리뷰 작성자</span>
-                            <small class="rate">
-                                <i class="icon-star2" th:each="num: ${#numbers.sequence(1, review.score)}"></i>
-                            </small>
+                        <div>
+                            <div class="col-md-11 col-xs-11">
+                                <span th:text="${review.user.name}">닉네임</span>
+                                <span>/</span>
+                                <span th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd')}">날짜</span>
+                                <span th:if="${user.id}==${review.user.id}"> | <a href="#">수정</a> | <a
+                                        href="#">삭제</a></span>
+                                <span th:if="${user.id}!=${review.user.id}"> | <a href="#">신고</a></span>
+                            </div>
+                            <div class="col-md-1 col-xs-1">
+                                <button type="button" onclick="likeReview();"
+                                        class="btn btn-primary likebtn">
+                                    <i class="icon-thumbs-up"></i>
+                                    <span>0</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-xs-12 review-score">
+                            <i class="icon-star2" th:each="num: ${#numbers.sequence(1, review.score)}"></i>
+                        </div>
+                        <div class="col-md-12 col-xs-12 review-content" th:text="${review.content}">리뷰 내용</div>
                     </div>
                 </div>
             </div>
@@ -91,17 +110,14 @@
                                     <label for="3-stars" class="star">★</label>
                                     <input type="radio" id="2-stars" name="score" value="2" v-model="ratings"/>
                                     <label for="2-stars" class="star">★</label>
-                                    <input type="radio" id="1-star" name="score" value="1" v-model="ratings" />
+                                    <input type="radio" id="1-star" name="score" value="1" v-model="ratings"/>
                                     <label for="1-star" class="star">★</label>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>제목</label>
-                                <input id="title" type="text" name="title" class="form-control" maxlength="30">
-                            </div>
-                            <div class="form-group">
-                                <label>내용</label>
-                                <textarea id="content" name="content" class="form-control" maxlength="2048" style="height: 161px; width: 100%;"></textarea>
+                                <label for="content">내용</label>
+                                <textarea id="content" name="content" class="form-control" maxlength="2048"
+                                          style="height: 161px; width: 100%;"></textarea>
                             </div>
 
                             <div class="modal-footer">
@@ -118,12 +134,9 @@
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <script>
         function checkReviewForm() {
-            var score = $("input[name=score]:checked").val();
+            const score = $("input[name=score]:checked").val();
             if (score == undefined) {
                 alert("별점을 입력해주세요.");
-                return false;
-            } else if ($("#title").val() == "") {
-                alert("제목을 입력해주세요.");
                 return false;
             } else if ($("#content").val() == "") {
                 alert("내용을 입력해주세요.");
@@ -131,7 +144,7 @@
             }
             $.ajax({
                 type: 'POST',
-                url: "/games/"+$("#gameId").val()+"/reviewDuplicateCheck",
+                url: "/games/" + $("#gameId").val() + "/reviewDuplicateCheck",
                 data: {
                     gameId: $("#gameId").val()
                 },
@@ -147,7 +160,11 @@
             return false;
         }
     </script>
+    <script>
+        function likeReview() {
 
+        }
+    </script>
 </th:block>
 
 </html>

@@ -66,7 +66,7 @@ public class UserService implements UserDetailsService {
 
     // 로그인 시 암호화된 비밀번호 비교
     public boolean loginCheck(User user) {
-        if (!userRepository.findByEmail(user.getEmail()).isEmpty()) {
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             User actUser = userRepository.findByEmail(user.getEmail()).get();
             return getPasswordEncoder().matches(
                     getPasswordEncoder().encode(user.getPassword()),
@@ -80,9 +80,5 @@ public class UserService implements UserDetailsService {
         if (user != null) return user;
         else return (User) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
-    }
-
-    public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
     }
 }

@@ -1,7 +1,6 @@
 package com.example.whatsyourgame.controller;
 
 import com.example.whatsyourgame.entity.Game;
-import com.example.whatsyourgame.entity.User;
 import com.example.whatsyourgame.service.GameService;
 import com.example.whatsyourgame.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -16,18 +15,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HomeController {
 
-    private final HttpSession httpSession;
-    private final UserService userService;
     private final GameService gameService;
 
     @GetMapping("/")
     public String main(Model model) {
-/*        User user = (User) httpSession.getAttribute("user");
-        if (user != null) {
-            model.addAttribute("userId", user.getId());
-            model.addAttribute("userName", user.getName());
-        }*/
-
         // 신작게임 4개
         List<Game> latestGameList = gameService.findLatestTop4();
         model.addAttribute("latestGameList", latestGameList);
@@ -36,7 +27,6 @@ public class HomeController {
         // 별점을 나타낼 GameReviewInfo 와 조인
         List<Game> popularGameList = gameService.findPopularTop6();
         model.addAttribute("popularGameList", popularGameList);
-
 
         return "index";
     }

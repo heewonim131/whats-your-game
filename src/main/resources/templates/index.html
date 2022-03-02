@@ -1,26 +1,24 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="/layout/basic" xmlns:sec="http://www.w3.org/1999/xhtml">
+      layout:decorate="/layout/basic">
 <th:block layout:fragment="title">
     <title>What's Your Game?</title>
 </th:block>
 
-
 <th:block layout:fragment="content">
-
     <aside id="fh5co-hero" class="js-fullheight">
         <div class="flexslider js-fullheight">
             <ul class="slides">
-                <li th:each="lgame : ${latestGameList}" th:style="'background-image: url(' + ${lgame.img} + ');'">
+                <li th:each="game : ${latestGameList}" th:style="'background-image: url(' + ${game.img} + ');'">
                     <div class="overlay-gradient"></div>
                     <div class="container">
                         <div class="col-md-6 col-md-offset-3 col-md-pull-3 js-fullheight slider-text">
                             <div class="slider-text-inner">
                                 <div class="desc">
                                     <span class="price">별점(리뷰)</span>
-                                    <h2 th:text="${lgame.name}">게임 제목</h2>
-                                    <p th:text="${lgame.description}">게임 설명</p>
-                                    <p><a href="single.html" class="btn btn-primary btn-outline btn-lg">자세히 보기</a></p>
+                                    <h2 th:text="${game.name}">게임 제목</h2>
+                                    <p th:text="${game.description}">게임 설명</p>
+                                    <p><a th:href="'/games/'+${game.id}" class="btn btn-primary btn-outline btn-lg">자세히 보기</a></p>
                                 </div>
                             </div>
                         </div>
@@ -38,7 +36,7 @@
 						<img class="icon-img" th:src="@{/images/console.png}">
                         <h3>GAMES</h3>
                         <p>신작 게임부터 인기 게임까지! What's your game? 에서 게임 정보를 확인하고 당신의 게임을 찾아보세요!</p>
-                        <p class="more-info"><a href="#" class="btn btn-primary btn-outline">전체 게임</a></p>
+                        <p class="more-info"><a href="/games" class="btn btn-primary btn-outline">전체 게임</a></p>
                     </div>
                 </div>
                 <div class="col-md-4 col-sm-4 text-center">
@@ -46,7 +44,7 @@
 						<img class="icon-img" th:src="@{/images/contract.png}">
                         <h3>REVIEWS</h3>
                         <p>회원들이 작성한 리뷰를 확인해보세요! 당신이 플레이해 본 게임에 별점과 리뷰를 남겨 다른 사람들에게 추천해보세요!</p>
-                        <p class="more-info"><a href="#" class="btn btn-primary btn-outline">전체 리뷰</a></p>
+                        <p class="more-info"><a href="/reviews" class="btn btn-primary btn-outline">전체 리뷰</a></p>
                     </div>
                 </div>
                 <div class="col-md-4 col-sm-4 text-center">
@@ -54,7 +52,7 @@
 						<img class="icon-img" th:src="@{/images/heart.png}">
                         <h3>WISH LIST</h3>
                         <p>마음에 드는 게임을 찾아 찜을 눌러보세요! 찜 리스트에 담긴 게임을 플레이하고 당신의 게임으로 만드세요!</p>
-                        <p class="more-info"><a href="#" class="btn btn-primary btn-outline">찜 리스트</a></p>
+                        <p class="more-info"><a href="/users/mypage" class="btn btn-primary btn-outline">찜 리스트</a></p>
                     </div>
                 </div>
             </div>
@@ -68,21 +66,21 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4 text-center animate-box" th:each="pgame: ${popularGameList}">
+                <div class="col-md-4 text-center animate-box" th:each="game: ${popularGameList}">
                     <div class="product">
-                        <a href="single.html" class="icon">
-                            <div class="product-grid" th:style="'background-image:url('+${pgame.img}+');'">
+                        <a th:href="'/games/'+${game.id}" class="icon">
+                            <div class="product-grid" th:style="'background-image:url('+${game.img}+');'">
                             </div>
                         </a>
                         <div class="desc">
-                            <h3 th:text="${pgame.name}"><a href="single.html">게임 제목</a></h3>
+                            <h3 th:text="${game.name}"><a th:href="'/games/'+${game.id}">게임 제목</a></h3>
                             <span class="price">별점(리뷰)</span>
                         </div>
                     </div>
                 </div>
                 </div>
             </div>
-            <p class="more-info"><a href="#" class="btn btn-primary btn-outline">더보기</a></p>
+            <p class="more-info"><a href="/games" class="btn btn-primary btn-outline">더보기</a></p>
         </div>
     </div>
 </th:block>

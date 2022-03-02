@@ -24,7 +24,7 @@
                             </div>
                         </a>
                         <div class="desc">
-                            <h3 th:text="${game.name}"><a href="single.html">게임 제목</a></h3>
+                            <h3 th:text="${game.name}"><a th:href="'/games/'+${game.id}">게임 제목</a></h3>
                             <span th:text="${game.genre}+' | '+${game.platform}+' | '+'게임사'">장르 | 플랫폼 | 게임사</span><br>
                             <span class="price">별점(리뷰)</span>
                         </div>
