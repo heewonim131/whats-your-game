@@ -55,8 +55,8 @@
             <div class="row fh5co-tab-content tab-content active fadeIn animated-fast">
                 <div class="col-md-12 col-xs-12 col-md-offset-1 review-header">
                     <h3 class="col-md-7 col-xs-8">REVIEWS</h3>
-                    <a sec:authorize="isAuthenticated()" data-toggle="modal" href="#registerModal"
-                       class="col-md-2 col-xs-offset-1 btn btn-primary btn-outline">작성</a>
+                    <button sec:authorize="isAuthenticated()" data-toggle="modal" name="write"
+                       class="col-md-2 col-xs-offset-1 btn btn-primary btn-outline">작성</button>
                 </div>
 
                 <div class="col-md-12 col-xs-12 col-md-offset-1 review-body">
@@ -64,11 +64,14 @@
                         <div>
                             <div class="col-md-11 col-xs-11">
                                 <span th:text="${review.user.name}">닉네임</span>
-                                <span>/</span>
-                                <span th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd')}">날짜</span>
-                                <span th:if="${user.id}==${review.user.id}"> | <a href="#">수정</a> | <a
-                                        href="#">삭제</a></span>
-                                <span th:if="${user.id}!=${review.user.id}"> | <a href="#">신고</a></span>
+                                <span>|</span>
+                                <span th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd HH:mm')}">날짜</span>
+                                <span th:if="${user.id}==${review.user.id}">
+                                    <button th:value="${review.id}" class="btn review-btn" name="update">수정</button>
+                                    <button th:value="${review.id}" class="btn review-btn" name="delete">삭제</button>
+                                <span th:if="${user.id}!=${review.user.id}">
+                                    <button th:value="${review.id}" class="btn review-btn" name="report">삭제</button>
+                                </span>
                             </div>
                             <div class="col-md-1 col-xs-1">
                                 <button type="button" onclick="likeReview();"
@@ -77,39 +80,41 @@
                                     <span>0</span>
                                 </button>
                             </div>
+                            <div class="col-md-12 col-xs-12 review-score">
+                                <i class="icon-star2" th:each="num: ${#numbers.sequence(1, review.score)}"></i>
+                            </div>
+                            <input type="hidden" th:value="${review.score}">
+                            <div class="col-md-12 col-xs-12 review-content" th:text="${review.content}">리뷰 내용</div>
                         </div>
-                        <div class="col-md-12 col-xs-12 review-score">
-                            <i class="icon-star2" th:each="num: ${#numbers.sequence(1, review.score)}"></i>
-                        </div>
-                        <div class="col-md-12 col-xs-12 review-content" th:text="${review.content}">리뷰 내용</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="modal">
+        <!--모달-->
+        <div class="modal fade" id="review-modal" tabindex="-1" role="dialog" aria-labelledby="modal">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <span class="modal-title" id="modal">리뷰 작성</span>
+                        <span class="modal-title" id="modal-title"></span>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form id="reviewForm" method="post" th:action="@{'/games/'+${game.id}+'/reviews'}">
+                        <form id="writeForm" method="post" th:action="@{'/games/'+${game.id}+'/reviews'}">
                             <input type="hidden" id="gameId" th:value="${game.id}">
                             <div class="form-group">
                                 <label>별점</label>
                                 <div class="star-rating space-x-4 mx-auto">
-                                    <input type="radio" id="5-stars" name="score" value="5" v-model="ratings"/>
-                                    <label for="5-stars" class="star pr-4">★</label>
-                                    <input type="radio" id="4-stars" name="score" value="4" v-model="ratings"/>
-                                    <label for="4-stars" class="star">★</label>
-                                    <input type="radio" id="3-stars" name="score" value="3" v-model="ratings"/>
-                                    <label for="3-stars" class="star">★</label>
-                                    <input type="radio" id="2-stars" name="score" value="2" v-model="ratings"/>
-                                    <label for="2-stars" class="star">★</label>
+                                    <input type="radio" id="5-star" name="score" value="5" v-model="ratings"/>
+                                    <label for="5-star" class="star pr-4">★</label>
+                                    <input type="radio" id="4-star" name="score" value="4" v-model="ratings"/>
+                                    <label for="4-star" class="star">★</label>
+                                    <input type="radio" id="3-star" name="score" value="3" v-model="ratings"/>
+                                    <label for="3-star" class="star">★</label>
+                                    <input type="radio" id="2-star" name="score" value="2" v-model="ratings"/>
+                                    <label for="2-star" class="star">★</label>
                                     <input type="radio" id="1-star" name="score" value="1" v-model="ratings"/>
                                     <label for="1-star" class="star">★</label>
                                 </div>
@@ -129,34 +134,99 @@
                 </div>
             </div>
         </div>
+
+
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <script>
+        var action = '';
+        var rid = 0;
+        var gid = $("#gameId").val();
+
+        $("button[name='write']").click(function () {
+            action = 'write';
+            $("#modal-title").text("리뷰 작성");
+            $("#review-modal").modal();
+        });
+        $("button[name='update']").click(function (){
+            action = 'update';
+            rid = this.value;
+
+            // content
+            var row = $(this).parent().parent().parent();
+            var score = '#'+row.children().eq(3).val()+'-star';
+            var content = row.children().eq(4).text();
+
+            $("#modal-title").text("리뷰 수정");
+            $(score).prop("checked", true);
+            $("#content").val(content);
+            $("#review-modal").modal();
+        });
+
         function checkReviewForm() {
-            const score = $("input[name=score]:checked").val();
+            var score = $("input[name=score]:checked").val();
+            var content = $("#content").val();
             if (score == undefined) {
                 alert("별점을 입력해주세요.");
                 return false;
-            } else if ($("#content").val() == "") {
+            } else if (content == "") {
                 alert("내용을 입력해주세요.");
                 return false;
             }
-            $.ajax({
-                type: 'POST',
-                url: "/games/" + $("#gameId").val() + "/reviewDuplicateCheck",
-                data: {
-                    gameId: $("#gameId").val()
-                },
-                success: function (result) {
-                    if (result == 1) {
-                        alert("작성하신 리뷰가 등록되었습니다.");
-                        $("#reviewForm").submit();
-                    } else {
-                        alert("이미 리뷰를 작성하셨습니다.");
+            if (action == 'write') {
+                $.ajax({
+                    type: 'POST',
+                    url: "/games/" + gid + "/reviewDuplicateCheck",
+                    data: {
+                        gameId: gid
+                    },
+                    success: function (result) {
+                        if (result == 1) {
+                            $.ajax({
+                                type: 'POST',
+                                url: "/games/" + gid + "/reviews",
+                                data: {
+                                    gameId: gid,
+                                    score: score,
+                                    content: content
+                                },
+                                success: function (data) {
+                                    alert("작성하신 리뷰가 등록되었습니다.");
+                                    $("#review-modal").modal('toggle');
+                                }
+                            });
+                        } else {
+                            alert("이미 리뷰를 작성하셨습니다.");
+                            $("#review-modal").modal('toggle');
+                        }
+                    },
+                    complete: function (data) {
+                        location.reload();
                     }
-                }
-            });
+                });
+            } else if (action == 'update') {
+                $.ajax({
+                    type: 'PUT',
+                    url: "/games/" + gid + "/reviews/" + rid,
+                    data: {
+                        id: rid,
+                        score: score,
+                        content: content
+                    },
+                    success: function (data) {
+                        alert("작성하신 리뷰가 수정되었습니다.");
+                        $("#review-modal").modal('toggle');
+                    },
+                    error: function (error) {
+                        alert("오류가 발생하였습니다.");
+                        console.log(error);
+                    },
+                    complete: function (data) {
+                        location.reload();
+                    }
+                });
+            }
             return false;
         }
     </script>

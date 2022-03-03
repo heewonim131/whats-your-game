@@ -48,14 +48,20 @@ public class GameController {
         return reviewService.reviewDuplicateCheck(gameId, user.getId());
     }
 
+    @ResponseBody
     @PostMapping("{gameId}/reviews")
-    public String writeReview(@PathVariable Long gameId, Review review) {
+    public void write(@PathVariable Long gameId, Review review) {
         User user = userService.currentLoginUser();
         review.setUser(user);
         Game game = gameService.findById(gameId).orElse(null);
         review.setGame(game);
         reviewService.save(review);
-        return "redirect:/games/{gameId}";
+    }
+
+    @ResponseBody
+    @PutMapping("{gameId}/reviews/{reviewId}")
+    public void update(Review review) {
+        reviewService.update(review);
     }
 
 }

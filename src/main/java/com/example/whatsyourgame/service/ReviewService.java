@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -31,6 +32,11 @@ public class ReviewService {
     // 리뷰 최근 작성순으로 출력
     public List<Review> findReviewsByGameId(Long gameId) {
         return reviewRepository.findReviewsByGameIdOrderByCreatedAtDesc(gameId);
+    }
+
+    public int update(Review review) {
+        review.setUpdatedAt(LocalDateTime.now());
+        return reviewRepository.update(review.getId(), review.getScore(), review.getContent(), review.getUpdatedAt());
     }
 
 }
