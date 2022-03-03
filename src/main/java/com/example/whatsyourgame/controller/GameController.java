@@ -64,4 +64,10 @@ public class GameController {
         reviewService.update(review);
     }
 
+    @ResponseBody
+    @DeleteMapping("{gameId}/reviews/{reviewId}")
+    public void delete(@PathVariable Long reviewId) {
+        reviewService.delete(reviewId);
+    }
+
 }

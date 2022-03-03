@@ -39,4 +39,8 @@ public class ReviewService {
         return reviewRepository.update(review.getId(), review.getScore(), review.getContent(), review.getUpdatedAt());
     }
 
+    public int delete(Long reviewId) {
+        return reviewRepository.delete(reviewId);
+    }
+
 }

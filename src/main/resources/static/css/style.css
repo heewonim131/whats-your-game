@@ -1967,7 +1967,7 @@ button.likebtn {
 button.btn.review-btn {
   padding: 0;
   background-color: #fff;
-  margin: 0 0 0 5px;
+  margin: 0 -5px 0 5px;
   color: #d1c286;
   font-size: 14px;
 }

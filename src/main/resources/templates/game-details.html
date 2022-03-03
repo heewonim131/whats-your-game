@@ -65,12 +65,10 @@
                             <div class="col-md-11 col-xs-11">
                                 <span th:text="${review.user.name}">닉네임</span>
                                 <span>|</span>
-                                <span th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd HH:mm')}">날짜</span>
+                                <small th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd HH:mm')}">날짜</small>
                                 <span th:if="${user.id}==${review.user.id}">
                                     <button th:value="${review.id}" class="btn review-btn" name="update">수정</button>
                                     <button th:value="${review.id}" class="btn review-btn" name="delete">삭제</button>
-                                <span th:if="${user.id}!=${review.user.id}">
-                                    <button th:value="${review.id}" class="btn review-btn" name="report">삭제</button>
                                 </span>
                             </div>
                             <div class="col-md-1 col-xs-1">
@@ -149,6 +147,7 @@
             $("#modal-title").text("리뷰 작성");
             $("#review-modal").modal();
         });
+
         $("button[name='update']").click(function (){
             action = 'update';
             rid = this.value;
@@ -162,6 +161,27 @@
             $(score).prop("checked", true);
             $("#content").val(content);
             $("#review-modal").modal();
+        });
+
+        $("button[name='delete']").click(function () {
+            rid = this.value;
+            if (confirm('정말 리뷰를 삭제하시겠습니까?') == true) {
+                $.ajax({
+                    type: 'DELETE',
+                    url: "/games/" + gid + "/reviews/" + rid,
+                    data: {
+                        reviewId: rid
+                    },
+                    success: function (data) {
+                        alert("삭제되었습니다.");
+                        location.reload();
+                    },
+                    error: function (error) {
+                        alert("오류가 발생하였습니다.");
+                        console.log(error);
+                    }
+                });
+            }
         });
 
         function checkReviewForm() {
@@ -194,15 +214,13 @@
                                 success: function (data) {
                                     alert("작성하신 리뷰가 등록되었습니다.");
                                     $("#review-modal").modal('toggle');
+                                    location.reload();
                                 }
                             });
                         } else {
                             alert("이미 리뷰를 작성하셨습니다.");
                             $("#review-modal").modal('toggle');
                         }
-                    },
-                    complete: function (data) {
-                        location.reload();
                     }
                 });
             } else if (action == 'update') {
@@ -217,13 +235,11 @@
                     success: function (data) {
                         alert("작성하신 리뷰가 수정되었습니다.");
                         $("#review-modal").modal('toggle');
+                        location.reload();
                     },
                     error: function (error) {
                         alert("오류가 발생하였습니다.");
                         console.log(error);
-                    },
-                    complete: function (data) {
-                        location.reload();
                     }
                 });
             }

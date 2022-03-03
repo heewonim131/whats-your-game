@@ -45,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                         .antMatchers("/", "/css/**", "/fonts/**", "/images/**", "/js/**", "/sass/**",
                                                 "/favicon.ico", "/resources/**", "/error").permitAll()
                                         .antMatchers("/users", "/users/login", "/users/login-error").permitAll()
-                                        .antMatchers("/game/**").permitAll()
+                                        .antMatchers("/games/**").permitAll()
                                         .antMatchers("/users/mypage").hasRole("USER")
                                 .anyRequest().authenticated()
                 )
