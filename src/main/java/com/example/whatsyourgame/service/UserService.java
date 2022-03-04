@@ -81,9 +81,9 @@ public class UserService implements UserDetailsService {
         if (user != null) return Optional.of(user);
         Object principal = SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
+        if (principal instanceof User) {
             System.out.println("principal instanceof UserDetails");
-            return (Optional<User>) principal;
+            return Optional.of((User) principal);
         }
         return Optional.empty();
     }

@@ -44,9 +44,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 request
                                         .antMatchers("/", "/css/**", "/fonts/**", "/images/**", "/js/**", "/sass/**",
                                                 "/favicon.ico", "/resources/**", "/error").permitAll()
-                                        .antMatchers("/users", "/users/login", "/users/login-error").permitAll()
-                                        .antMatchers("/games/**").permitAll()
-                                        .antMatchers("/reviews/**").permitAll()
+                                        .antMatchers("/users", "/users/emailDuplicateCheck", "/users/login", "/users/login-error").permitAll()
+                                        .antMatchers("/games/**", "/reviews/**").permitAll()
                                         .antMatchers("/users/mypage").hasRole("USER")
 
                                 .anyRequest().authenticated()

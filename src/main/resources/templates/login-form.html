@@ -10,7 +10,7 @@
 
     <div class="container-login" id="container-login">
         <div class="form-container sign-up-container">
-            <form method="post" class="form-login" th:action="@{/users}">
+            <form id="joinForm" method="post" class="form-login" th:action="@{/users}">
                 <h1>회원가입</h1>
                 <div class="social-container">
                     <a href="/oauth2/authorization/kakao" class="a-login"><img th:src="@{/images/login-kakao.png}"></a>
@@ -27,7 +27,7 @@
                 <span class="passwordValid"></span>
                 <input type="password" id="passwordRpt" placeholder="비밀번호 확인" class="input-login" required/>
                 <span class="passwordMatch"></span>
-                <button type="button" class="btn-login" onclick="checkJoinForm();">회원가입</button>
+                <button type="button" class="btn-login" name="join">회원가입</button>
             </form>
         </div>
         <div class="form-container sign-in-container">
@@ -154,7 +154,7 @@
         });
 
         // 회원가입 폼 검사
-        function checkJoinForm() {
+        $("button[name='join']").click(function () {
             if (!nameJ.test($("#name").val())) {
                 alert("닉네임을 확인해주세요.");
                 return false;
@@ -185,7 +185,7 @@
                 }
             });
             return false;
-        }
+        });
     </script>
 
 </th:block>
