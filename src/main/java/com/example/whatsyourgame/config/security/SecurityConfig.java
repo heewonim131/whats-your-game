@@ -46,7 +46,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                                 "/favicon.ico", "/resources/**", "/error").permitAll()
                                         .antMatchers("/users", "/users/login", "/users/login-error").permitAll()
                                         .antMatchers("/games/**").permitAll()
+                                        .antMatchers("/reviews/**").permitAll()
                                         .antMatchers("/users/mypage").hasRole("USER")
+
                                 .anyRequest().authenticated()
                 )
                 .formLogin(login->

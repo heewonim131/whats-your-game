@@ -18,6 +18,7 @@ public class ReviewService {
     private ReviewRepository reviewRepository;
 
     public Review save(Review review) {
+        review.setLikeCnt(0);
         review.setCreatedAt(LocalDateTime.now());
         review.setUpdatedAt(LocalDateTime.now());
         return reviewRepository.save(review);
@@ -43,4 +44,15 @@ public class ReviewService {
         return reviewRepository.delete(reviewId);
     }
 
+    public Optional<Review> findById(Long reviewId) {
+        return reviewRepository.findById(reviewId);
+    }
+
+    public int findLikeCntByReviewId(Long reviewId) {
+        return reviewRepository.findLikeCntByReviewId(reviewId);
+    }
+
+    public int updateLikeCnt(Long reviewId, int like_cnt) {
+        return reviewRepository.updateLikeCnt(reviewId, like_cnt);
+    }
 }

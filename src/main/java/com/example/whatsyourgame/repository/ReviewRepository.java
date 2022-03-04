@@ -19,10 +19,18 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     Optional<Review> findReviewByGameIdAndUserId(Long gameId, Long userId);
 
     @Modifying(clearAutomatically = true)
-    @Query(value = "update review r set r.score = :score, r.content = :content, r.updated_at = :updated_at where r.id = :id", nativeQuery = true)
-    int update(@Param("id") Long reviewId, @Param("score") int score, @Param("content") String content, @Param("updated_at")LocalDateTime updated_at);
+    @Query(value = "update review r set r.score = :score, r.content = :content, r.updated_at = :updated_at where r.id = :reviewId", nativeQuery = true)
+    int update(Long reviewId, int score, String content, LocalDateTime updated_at);
 
     @Modifying(clearAutomatically = true)
-    @Query(value = "delete from review r where r.id = :id", nativeQuery = true)
-    int delete(@Param("id") Long reviewId);
+    @Query(value = "delete from review r where r.id = :reviewId", nativeQuery = true)
+    int delete(Long reviewId);
+
+    @Query(value = "select r.like_cnt from review r where r.id = :reviewId", nativeQuery = true)
+    int findLikeCntByReviewId(Long reviewId);
+
+    @Modifying(clearAutomatically = true)
+    @Query(value = "update review r set r.like_cnt = :like_cnt where r.id = :reviewId", nativeQuery = true)
+    int updateLikeCnt(Long reviewId, int like_cnt);
+
 }

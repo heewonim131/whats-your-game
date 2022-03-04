@@ -48,6 +48,11 @@ public class User implements UserDetails {
     @ToString.Exclude
     private List<Review> reviews = new ArrayList<>();
 
+    @OneToMany
+    @JoinColumn(name = "user_id")
+    @ToString.Exclude
+    private List<Likey> likeys = new ArrayList<>();
+
     public User update(String name) {
         this.name = name;
         return this;

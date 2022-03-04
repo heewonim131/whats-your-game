@@ -66,16 +66,15 @@
                                 <span th:text="${review.user.name}">닉네임</span>
                                 <span>|</span>
                                 <small th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd HH:mm')}">날짜</small>
-                                <span th:if="${user.id}==${review.user.id}">
+                                <span th:if="${userId}==${review.user.id}">
                                     <button th:value="${review.id}" class="btn review-btn" name="update">수정</button>
                                     <button th:value="${review.id}" class="btn review-btn" name="delete">삭제</button>
                                 </span>
                             </div>
                             <div class="col-md-1 col-xs-1">
-                                <button type="button" onclick="likeReview();"
-                                        class="btn btn-primary likebtn">
+                                <button type="button" th:value="${review.id}" name="likey" class="btn btn-primary likebtn">
                                     <i class="icon-thumbs-up"></i>
-                                    <span>0</span>
+                                    <span th:text="${review.likeCnt}">추천수</span>
                                 </button>
                             </div>
                             <div class="col-md-12 col-xs-12 review-score">
@@ -168,7 +167,7 @@
             if (confirm('정말 리뷰를 삭제하시겠습니까?') == true) {
                 $.ajax({
                     type: 'DELETE',
-                    url: "/games/" + gid + "/reviews/" + rid,
+                    url: "/reviews/" + rid,
                     data: {
                         reviewId: rid
                     },
@@ -197,7 +196,7 @@
             if (action == 'write') {
                 $.ajax({
                     type: 'POST',
-                    url: "/games/" + gid + "/reviewDuplicateCheck",
+                    url: "/reviews/reviewDuplicateCheck",
                     data: {
                         gameId: gid
                     },
@@ -205,7 +204,7 @@
                         if (result == 1) {
                             $.ajax({
                                 type: 'POST',
-                                url: "/games/" + gid + "/reviews",
+                                url: "/reviews",
                                 data: {
                                     gameId: gid,
                                     score: score,
@@ -226,7 +225,7 @@
             } else if (action == 'update') {
                 $.ajax({
                     type: 'PUT',
-                    url: "/games/" + gid + "/reviews/" + rid,
+                    url: "/reviews/" + rid,
                     data: {
                         id: rid,
                         score: score,
@@ -236,10 +235,6 @@
                         alert("작성하신 리뷰가 수정되었습니다.");
                         $("#review-modal").modal('toggle');
                         location.reload();
-                    },
-                    error: function (error) {
-                        alert("오류가 발생하였습니다.");
-                        console.log(error);
                     }
                 });
             }
@@ -247,9 +242,63 @@
         }
     </script>
     <script>
-        function likeReview() {
+        $("button[name='likey']").click(function () {
+            rid = this.value;
+            var span = $(this).children().eq(1);
+            $.ajax({
+                type: 'POST',
+                url: "/reviews/likeLoginCheck",
+                async:false,
+                success: function (result) {
+                    if (result == 1) {
+                        $.ajax({
+                            type: 'POST',
+                            url: "/reviews/" + rid + "/likeDuplicateCheck",
+                            async:false,
+                            success: function (result) {
+                                if (result == 2) {
+                                    alert("자신이 쓴 리뷰는 추천할 수 없습니다.");
+                                } else if (result == 1) {
+                                    // 추천
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: "/reviews/" + rid + "/like",
+                                        async:false,
+                                        success: function () {
+                                            console.log("추천됨");
+                                        }
+                                    });
+                                } else {
+                                    // 추천 취소
+                                    $.ajax({
+                                        type: 'DELETE',
+                                        url: "/reviews/" + rid + "/dislike",
+                                        async:false,
+                                        success: function () {
+                                            console.log("삭제됨");
+                                        }
+                                    });
+                                }
+                            },
+                            complete: function () {
+                                // 추천수
+                                $.ajax({
+                                    type: 'POST',
+                                    url: "/reviews/" + rid + "/likeCnt",
+                                    async:false,
+                                    success: function (result) {
+                                        span.replaceWith("<span>" + result + "</span>");
+                                    }
+                                });
+                            }
+                        });
+                    } else {
+                        alert("로그인이 필요합니다.");
+                    }
+                }
+            });
 
-        }
+        });
     </script>
 </th:block>
 

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -75,10 +76,15 @@ public class UserService implements UserDetailsService {
     }
 
     // 현재 로그인 유저 넘기기
-    public User currentLoginUser() {
+    public Optional<User> currentLoginUser() {
         User user = (User) httpSession.getAttribute("user");
-        if (user != null) return user;
-        else return (User) SecurityContextHolder.getContext()
+        if (user != null) return Optional.of(user);
+        Object principal = SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            System.out.println("principal instanceof UserDetails");
+            return (Optional<User>) principal;
+        }
+        return Optional.empty();
     }
 }

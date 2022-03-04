@@ -29,7 +29,6 @@ public class UserController {
     @ResponseBody
     @PostMapping("emailDuplicateCheck")
     public int emailDuplicateCheck(@RequestParam("email") String email) {
-//    public int emailDuplicateCheck(@PathVariable String email) {
         return userService.emailDuplicateCheck(email);
     }
 
@@ -46,7 +45,7 @@ public class UserController {
 
     @GetMapping("mypage")
     public String mypage(Model model) {
-        User user = userService.currentLoginUser();
+        User user = userService.currentLoginUser().orElse(null);
         model.addAttribute("user", user);
         return "mypage";
     }
