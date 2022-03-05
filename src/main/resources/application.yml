@@ -34,3 +34,6 @@ spring:
   # OAuth2.0
   profiles:
     include: oauth
+  # session
+  session:
+    store-type: jdbc
