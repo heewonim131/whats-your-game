@@ -48,4 +48,14 @@ public class Review {
     @JoinColumn(name = "review_id")
     @ToString.Exclude
     private List<Likey> likeys = new ArrayList<>();
+
+    public void update(int score, String content) {
+        this.score = score;
+        this.content = content;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void like(int likeCnt) {
+        this.likeCnt = likeCnt;
+    }
 }

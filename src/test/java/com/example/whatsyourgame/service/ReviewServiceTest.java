@@ -50,7 +50,7 @@ public class ReviewServiceTest {
 
         review.setScore(1);
         review.setContent("리뷰 수정");
-        reviewService.update(review);
+        reviewService.update(review.getId(), review);
 
         Review result = reviewRepository.findById(review.getId()).orElse(null);
         assertEquals(1, result.getScore());
