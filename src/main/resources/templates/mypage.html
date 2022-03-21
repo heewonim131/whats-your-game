@@ -26,19 +26,20 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4 text-center animate-box fadeInUp animated-fast">
+                <div class="col-md-4 text-center animate-box fadeInUp animated-fast" th:each="game: ${wishList}">
                     <div class="product">
-                        <a href="single.html" class="icon">
-                            <div class="product-grid" style="background-image:url(images/game.jpg);">
+                        <a th:href="'/games/'+${game.id}" class="icon">
+                            <div class="product-grid" th:style="'background-image:url('+${game.img}+');'">
                             </div>
                         </a>
                         <div class="desc">
-                            <h3><a href="single.html">Ariane Prin</a></h3>
+                            <h3 th:text="${game.name}"><a th:href="'/games/'+${game.id}">게임 제목</a></h3>
+                            <span th:text="${game.genre}+' | '+${game.platform}+' | '+'게임사'">장르 | 플랫폼 | 게임사</span><br>
+                            <span class="price">별점(리뷰)</span>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </th:block>

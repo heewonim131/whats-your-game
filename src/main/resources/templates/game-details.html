@@ -21,10 +21,10 @@
                     <div class="row animate-box fadeInUp animated-fast">
                         <div class="col-md-12 game-info-name">
                             <h2 th:text="${game.name}">게임 제목</h2>
-                            <a sec:authorize="isAuthenticated()" data-toggle="modal" href="#"
-                               class="btn btn-primary btn-outline">
-                                <i class="icon-heart"></i>
-                            </a>
+                            <button type="button" th:value="${game.id}" name="wish" class="btn btn-primary likebtn">
+                                <i th:if="${isWished.toString().equals('false')}" class="icon-heart"></i>
+                                <i th:if="${isWished.toString().equals('true')}" class="icon-heart2"></i>
+                            </button>
                         </div>
                     </div>
                     <div class="row">
@@ -66,7 +66,7 @@
                                 <span th:text="${review.user.name}">닉네임</span>
                                 <span>|</span>
                                 <small th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd HH:mm')}">날짜</small>
-                                <span th:if="${userId}==${review.user.id}">
+                                <span th:if="${user?.id}==${review.user.id}">
                                     <button th:value="${review.id}" class="btn review-btn" name="update">수정</button>
                                     <button th:value="${review.id}" class="btn review-btn" name="delete">삭제</button>
                                 </span>
@@ -298,6 +298,47 @@
                 }
             });
 
+        });
+    </script>
+    <!-- 게임 찜하기 -->
+    <script>
+        $("button[name='wish']").click(function () {
+            gid = this.value;
+            var i = $(this).children().eq(0);
+            $.ajax({
+                type: 'POST',
+                url: "/games/wishLoginCheck",
+                async:false,
+                success: function (result) {
+                    if (result == 1) {
+                        if (i.hasClass('icon-heart')) {
+                            // 찜
+                            $.ajax({
+                                type: 'POST',
+                                url: "/games/" + gid + "/wish",
+                                async:false,
+                                success: function () {
+                                    console.log("찜");
+                                    i.attr('class', 'icon-heart2');
+                                }
+                            });
+                        } else {
+                            // 찜 취소
+                            $.ajax({
+                                type: 'DELETE',
+                                url: "/games/" + gid + "/wish",
+                                async:false,
+                                success: function () {
+                                    console.log("찜취소");
+                                    i.attr('class', 'icon-heart');
+                                }
+                            });
+                        }
+                    } else {
+                        alert("로그인이 필요합니다.");
+                    }
+                }
+            });
         });
     </script>
 </th:block>

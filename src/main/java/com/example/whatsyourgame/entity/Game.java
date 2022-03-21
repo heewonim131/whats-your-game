@@ -52,4 +52,8 @@ public class Game {
     @ToString.Exclude
     private List<Review> reviews = new ArrayList<>();
 
+    @OneToMany
+    @JoinColumn(name = "game_id")
+    @ToString.Exclude
+    private List<Wish> wishs = new ArrayList<>();
 }

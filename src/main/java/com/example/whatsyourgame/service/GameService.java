@@ -1,6 +1,6 @@
 package com.example.whatsyourgame.service;
 
-import com.example.whatsyourgame.entity.Game;
+import com.example.whatsyourgame.entity.*;
 import com.example.whatsyourgame.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,11 +24,16 @@ public class GameService {
         return gameRepository.findById(id);
     }
 
-    public List<Game> findLatestTop4() {
-        return gameRepository.findLatestTop4();
+    public List<Game> findTop4GamesByOrderByReleasedAtDesc() {
+        return gameRepository.findTop4GamesByOrderByReleasedAtDesc();
     }
 
-    public List<Game> findPopularTop6() {
-        return gameRepository.findPopularTop6();
+    public List<Game> findTop6GamesByOrderByIdAsc() {
+        return gameRepository.findTop6GamesByOrderByIdAsc();
     }
+
+    public List<Game> findWishList(Long id) {
+        return gameRepository.findWishList(id);
+    }
+
 }

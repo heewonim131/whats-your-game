@@ -9,10 +9,8 @@ import java.util.List;
 
 @Repository
 public interface GameRepository extends JpaRepository<Game, Long> {
-
-    @Query(value = "select * from game order by released_at desc limit 4;", nativeQuery = true)
-    List<Game> findLatestTop4();
-
-    @Query(value = "select * from game order by id asc limit 6;", nativeQuery = true)
-    List<Game> findPopularTop6();
+    List<Game> findTop4GamesByOrderByReleasedAtDesc();
+    List<Game> findTop6GamesByOrderByIdAsc();
+    @Query(value = "SELECT g.* FROM wish w join game g where w.game_id = g.id and user_id = :id", nativeQuery = true)
+    List<Game> findWishList(Long id);   // 찜한 게임
 }
