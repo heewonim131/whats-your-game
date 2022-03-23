@@ -1,12 +1,10 @@
 package com.example.whatsyourgame.controller;
 
 import com.example.whatsyourgame.entity.Game;
+import com.example.whatsyourgame.entity.GameReviewInfo;
 import com.example.whatsyourgame.entity.Review;
 import com.example.whatsyourgame.entity.User;
-import com.example.whatsyourgame.service.GameService;
-import com.example.whatsyourgame.service.LikeyService;
-import com.example.whatsyourgame.service.ReviewService;
-import com.example.whatsyourgame.service.UserService;
+import com.example.whatsyourgame.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +18,7 @@ public class ReviewController {
     private final GameService gameService;
     private final ReviewService reviewService;
     private final LikeyService likeyService;
+    private final GameReviewInfoService gameReviewInfoService;
 
     @ResponseBody
     @PostMapping("")
@@ -31,6 +30,9 @@ public class ReviewController {
                 .orElseThrow(() -> new IllegalArgumentException("해당 게임이 존재하지 않습니다. id="+gameId));
         review.setGame(game);
         reviewService.save(review);
+        GameReviewInfo gameReviewInfo = gameReviewInfoService.findGameReviewInfoByGameId(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게임 정보가 존재하지 않습니다. id="+gameId));
+        gameReviewInfoService.update(gameId, gameReviewInfo.getReviewCnt() + 1, review.getScore());
     }
 
     @ResponseBody
@@ -49,8 +51,13 @@ public class ReviewController {
 
     @ResponseBody
     @DeleteMapping("{reviewId}")
-    public void delete(@PathVariable Long reviewId) {
+    public void delete(@PathVariable Long reviewId, @RequestParam("gameId") Long gameId) {
+        Review review = reviewService.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다. id="+reviewId));
         reviewService.delete(reviewId);
+        GameReviewInfo gameReviewInfo = gameReviewInfoService.findGameReviewInfoByGameId(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게임 정보가 존재하지 않습니다. id="+gameId));
+        gameReviewInfoService.update(gameId, gameReviewInfo.getReviewCnt() - 1, review.getScore() * (-1));
     }
 
     @ResponseBody

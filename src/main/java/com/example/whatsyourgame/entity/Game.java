@@ -56,4 +56,12 @@ public class Game {
     @JoinColumn(name = "game_id")
     @ToString.Exclude
     private List<Wish> wishs = new ArrayList<>();
+
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
+    @ToString.Exclude
+    private Publisher publisher;
+
+    @OneToOne(mappedBy = "game")
+    @ToString.Exclude
+    private GameReviewInfo gameReviewInfo;
 }

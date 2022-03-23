@@ -21,6 +21,16 @@
                     <div class="row animate-box fadeInUp animated-fast">
                         <div class="col-md-12 game-info-name">
                             <h2 th:text="${game.name}">게임 제목</h2>
+                            <div class="star-ratings star-game col-md-6 col-xs-6">
+                                <div class="star-ratings-fill space-x-2 text-lg"
+                                     th:style="'width: '+${game.gameReviewInfo.avgReviewScore *20}+'%'">
+                                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                                </div>
+                                <div class="star-ratings-base space-x-2 text-lg">
+                                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                                </div>
+                            </div>
+                            <span class="avgscore" th:text="${game.gameReviewInfo.avgReviewScore}+' ('+${game.gameReviewInfo.reviewCnt}+')'">별점 (리뷰)</span>
                             <button type="button" th:value="${game.id}" name="wish" class="btn btn-primary likebtn">
                                 <i th:if="${isWished.toString().equals('false')}" class="icon-heart"></i>
                                 <i th:if="${isWished.toString().equals('true')}" class="icon-heart2"></i>
@@ -38,7 +48,7 @@
                         </div>
                         <div class="col-md-12 col-xs-12 game-info">
                             <div class="col-md-4 col-xs-4">게임사</div>
-                            <div class="col-md-8 col-xs-8" th:text="${game.platform}">게임사</div>
+                            <div class="col-md-8 col-xs-8" th:text="${game.publisher.name}">게임사</div>
                         </div>
                         <div class="col-md-12 col-xs-12 game-info">
                             <div class="col-md-4 col-xs-4">출시일</div>
@@ -77,10 +87,15 @@
                                     <span th:text="${review.likeCnt}">추천수</span>
                                 </button>
                             </div>
-                            <div class="col-md-12 col-xs-12 review-score">
-                                <i class="icon-star2" th:each="num: ${#numbers.sequence(1, review.score)}"></i>
+                            <div class="star-ratings star-review">
+                                <div class="star-ratings-fill space-x-2 text-lg"
+                                     th:style="'width: '+${review.score *20}+'%'">
+                                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                                </div>
+                                <div class="star-ratings-base space-x-2 text-lg">
+                                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                                </div>
                             </div>
-                            <input type="hidden" th:value="${review.score}">
                             <div class="col-md-12 col-xs-12 review-content" th:text="${review.content}">리뷰 내용</div>
                         </div>
                     </div>
@@ -169,7 +184,8 @@
                     type: 'DELETE',
                     url: "/reviews/" + rid,
                     data: {
-                        reviewId: rid
+                        reviewId: rid,
+                        gameId: gid
                     },
                     success: function (data) {
                         alert("삭제되었습니다.");

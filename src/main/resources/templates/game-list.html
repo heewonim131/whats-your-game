@@ -25,8 +25,17 @@
                         </a>
                         <div class="desc">
                             <h3 th:text="${game.name}"><a th:href="'/games/'+${game.id}">게임 제목</a></h3>
-                            <span th:text="${game.genre}+' | '+${game.platform}+' | '+'게임사'">장르 | 플랫폼 | 게임사</span><br>
-                            <span class="price">별점(리뷰)</span>
+                            <span th:text="${game.genre}+' | '+${game.platform}+' | '+${game.publisher.name}">장르 | 플랫폼 | 게임사</span><br>
+                            <div class="star-ratings star-game star-game-list">
+                                <div class="star-ratings-fill space-x-2 text-lg"
+                                     th:style="'width: '+${game.gameReviewInfo.avgReviewScore *20}+'%'">
+                                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                                </div>
+                                <div class="star-ratings-base space-x-2 text-lg">
+                                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                                </div>
+                            </div>
+                            <span class="avgscore" th:text="${game.gameReviewInfo.avgReviewScore}+' ('+${game.gameReviewInfo.reviewCnt}+')'">별점 (리뷰)</span>
                         </div>
                     </div>
                 </div>
