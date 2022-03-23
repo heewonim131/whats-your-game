@@ -45,8 +45,9 @@ public class ReviewController {
 
     @ResponseBody
     @PutMapping("{reviewId}")
-    public void update(@PathVariable Long reviewId, Review reviewReq) {
+    public void update(@PathVariable Long reviewId, Review reviewReq, @RequestParam("gameId") Long gameId) {
         reviewService.update(reviewId, reviewReq);
+        gameReviewInfoService.update(gameId, reviewReq.getScore());
     }
 
     @ResponseBody

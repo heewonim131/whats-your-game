@@ -27,7 +27,7 @@ public class LikeyService {
                 .orElseThrow(() -> new IllegalArgumentException("로그인 유저가 존재하지 않습니다."));
         Review review = reviewService.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다. id=" + reviewId));
-        if (user.getId() == review.getUser().getId()) return 2;
+        if (user.getId().equals(review.getUser().getId())) return 2;
         else if (likeyRepository.findLikeyByUserIdAndReviewId(user.getId(), reviewId).isEmpty()) return 1;
         else return 0;
     }

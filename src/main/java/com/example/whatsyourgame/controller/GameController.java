@@ -9,6 +9,9 @@ import com.example.whatsyourgame.service.ReviewService;
 import com.example.whatsyourgame.service.UserService;
 import com.example.whatsyourgame.service.WishService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +30,8 @@ public class GameController {
     private final WishService wishService;
 
     @GetMapping("")
-    public String gameList(Model model) {
-        List<Game> gameList = gameService.findAll();
+    public String gameList(Model model, Pageable pageable) {
+        Page<Game> gameList = gameService.findAll(pageable);
         model.addAttribute("gameList", gameList);
         return "game-list";
     }

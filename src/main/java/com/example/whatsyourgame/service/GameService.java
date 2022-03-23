@@ -3,6 +3,9 @@ package com.example.whatsyourgame.service;
 import com.example.whatsyourgame.entity.*;
 import com.example.whatsyourgame.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +21,12 @@ public class GameService {
 
     public List<Game> findAll() {
         return gameRepository.findAll();
+    }
+
+    public Page<Game> findAll(Pageable pageable) {
+        int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber()) - 1;
+        pageable = PageRequest.of(page, 12);
+        return gameRepository.findAll(pageable);
     }
 
     public Optional<Game> findById(Long id) {

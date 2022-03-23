@@ -19,6 +19,13 @@ public class GameReviewInfoService {
         return gameReviewInfoRepository.findGameReviewInfoByGameId(gameId);
     }
 
+    public Long update(Long gameId, int reviewScore) {
+        GameReviewInfo gameReviewInfo = gameReviewInfoRepository.findGameReviewInfoByGameId(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게임 정보가 존재하지 않습니다. id=" + gameId));
+        gameReviewInfo.update(reviewScore);
+        return gameReviewInfo.getId();
+    }
+
     public Long update(Long gameId, int reviewCnt, int reviewScore) {
         GameReviewInfo gameReviewInfo = gameReviewInfoRepository.findGameReviewInfoByGameId(gameId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게임 정보가 존재하지 않습니다. id=" + gameId));

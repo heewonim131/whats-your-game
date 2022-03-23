@@ -13,7 +13,6 @@
 body {
   font-family: "Montserrat", Arial, sans-serif;
   font-weight: 400;
-  font-size: 16px;
   line-height: 1.7;
   color: #828282;
   background: #fff;
@@ -1957,7 +1956,7 @@ button.ghost {
   height: 30px;
   left: -15px;
 }
-.game-info-name.avgscore {
+.game-info-name .avg-score {
   font-size: 18px;
   margin: 0px 10px 0px -15px;
   color: #909090;
@@ -2010,4 +2009,7 @@ button.btn.review-btn {
   margin: 0 -5px 0 5px;
   color: #d1c286;
   font-size: 14px;
+}
+.review-body {
+  margin: 20px 95px;
 }

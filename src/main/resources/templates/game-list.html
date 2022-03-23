@@ -35,12 +35,44 @@
                                     <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
                                 </div>
                             </div>
-                            <span class="avgscore" th:text="${game.gameReviewInfo.avgReviewScore}+' ('+${game.gameReviewInfo.reviewCnt}+')'">별점 (리뷰)</span>
+                            <span class="avg-score" th:text="${game.gameReviewInfo.avgReviewScore}+' ('+${game.gameReviewInfo.reviewCnt}+')'">별점 (리뷰)</span>
                         </div>
                     </div>
                 </div>
             </div>
+            <nav style="text-align: center;">
+                <ul class="pagination"
+                    th:with="start=${T(Math).floor(gameList.number/10)*10 + 1},
+                    last=(${start + 9 < gameList.totalPages ? start + 9 : gameList.totalPages})">
+                    <li>
+                        <a th:href="@{/games(page=1)}" aria-label="First">
+                            <span aria-hidden="true">&lt;&lt;</span>
+                        </a>
+                    </li>
 
+                    <li th:class="${gameList.first} ? 'disabled'">
+                        <a th:href="${gameList.first} ? '#' :@{/games(page=${gameList.number})}" aria-label="Previous">
+                            <span aria-hidden="true">&lt;</span>
+                        </a>
+                    </li>
+
+                    <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == gameList.number + 1} ? 'active'">
+                        <a th:text="${page}" th:href="@{/games(page=${page})}"></a>
+                    </li>
+
+                    <li th:class="${gameList.last} ? 'disabled'">
+                        <a th:href="${gameList.last} ? '#' : @{/games(page=${gameList.number + 2})}" aria-label="Next">
+                            <span aria-hidden="true">&gt;</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a th:href="@{/games(page=${gameList.totalPages})}" aria-label="Last">
+                            <span aria-hidden="true">&gt;&gt;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </th:block>
