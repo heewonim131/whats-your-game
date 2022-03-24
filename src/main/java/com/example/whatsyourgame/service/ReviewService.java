@@ -21,6 +21,10 @@ public class ReviewService {
         return reviewRepository.findById(reviewId);
     }
 
+    public List<Review> findReviewsByUserId(Long userId) {
+        return reviewRepository.findReviewsByUserId(userId);
+    }
+
     public Review save(Review review) {
         review.setLikeCnt(0);
         review.setCreatedAt(LocalDateTime.now());

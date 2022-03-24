@@ -10,13 +10,46 @@
     <div class="container">
         <div class="row-mypage">
             <div class="col-md-4 animate-box fadeInUp animated-fast">
-                <div class="fh5co-contact-info">
-                    <h3>닉네임</h3>
-                </div>
+                    <h3>작성한 리뷰</h3>
             </div>
-            <div class="col-md-6 animate-box fadeInUp animated-fast">
-                <input type="text" placeholder="닉네임" name="name" th:value="${user.name}" class="input-mypage">
-                <button class="btn btn-primary">수정</button>
+            <div class="col-md-12 col-xs-12 review-body">
+                <div class="review-card no-review" th:if="${#lists.isEmpty(reviewList)}">아직 작성한 리뷰가 없습니다.</div>
+                <div class="col-md-12 col-xs-12 review-card" th:each="review: ${reviewList}">
+                    <div class="product col-md-3 col-xs-3">
+                        <a th:href="'/games/'+${review.game.id}" class="icon">
+                            <div class="product-grid review-game" th:style="'background-image:url('+${review.game.img}+');'">
+                            </div>
+                        </a>
+                        <div class="desc">
+                            <h5>리그 오브 레전드</h5>
+                        </div>
+                    </div>
+                    <div class="col-md-9 col-xs-9">
+                        <div class="col-md-9 col-xs-9">
+                            <span th:text="${review.user.name}">닉네임</span>
+                            <span>|</span>
+                            <small th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd HH:mm')}">날짜</small>
+                        </div>
+                        <div class="col-md-2 col-xs-2">
+                            <button type="button" th:value="${review.id}" name="likey"
+                                    class="btn btn-primary likebtn">
+                                <i class="icon-thumbs-up"></i>
+                                <span th:text="${review.likeCnt}">추천수</span>
+                            </button>
+                        </div>
+                        <div class="star-ratings star-review">
+                            <input type="hidden" th:value="${review.score}">
+                            <div class="star-ratings-fill space-x-2 text-lg"
+                                 th:style="'width: '+${review.score *20}+'%'">
+                                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                            </div>
+                            <div class="star-ratings-base space-x-2 text-lg">
+                                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-xs-12 review-content" th:text="${review.content}">리뷰 내용</div>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="fh5co-product">
@@ -25,7 +58,11 @@
                     <h3>찜한 게임</h3>
                 </div>
             </div>
-            <div class="row">
+            <div class="row col-md-12">
+                <div class="more-info" th:if="${#lists.isEmpty(wishList)}">아직 찜한 게임이 없습니다.
+                    <p class="more-info"><a href="/games" class="btn btn-primary btn-outline">전체게임</a></p>
+                </div>
+
                 <div class="col-md-4 text-center animate-box fadeInUp animated-fast" th:each="game: ${wishList}">
                     <div class="product">
                         <a th:href="'/games/'+${game.id}" class="icon">

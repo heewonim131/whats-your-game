@@ -13,6 +13,7 @@ import java.util.List;
 public interface GameRepository extends JpaRepository<Game, Long> {
     List<Game> findAll();
     Page<Game> findAll(Pageable pageable);
+    Page<Game> findGamesByNameContaining(String search, Pageable pageable);
     List<Game> findTop4GamesByOrderByReleasedAtDesc();
     List<Game> findTop6GamesByOrderByIdAsc();
     @Query(value = "SELECT g.* FROM wish w join game g where w.game_id = g.id and user_id = :id", nativeQuery = true)

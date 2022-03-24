@@ -1,8 +1,10 @@
 package com.example.whatsyourgame.controller;
 
 import com.example.whatsyourgame.entity.Game;
+import com.example.whatsyourgame.entity.Review;
 import com.example.whatsyourgame.entity.User;
 import com.example.whatsyourgame.service.GameService;
+import com.example.whatsyourgame.service.ReviewService;
 import com.example.whatsyourgame.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,7 @@ public class UserController {
 
     private final UserService userService;
     private final GameService gameService;
+    private final ReviewService reviewService;
 
     @GetMapping("")
     public String login() {
@@ -55,6 +58,8 @@ public class UserController {
         model.addAttribute("user", user);
         List<Game> wishList = gameService.findWishList(user.getId());   // 찜한 게임
         model.addAttribute("wishList", wishList);
+        List<Review> reviewList = reviewService.findReviewsByUserId(user.getId());   // 찜한 게임
+        model.addAttribute("reviewList", reviewList);
         return "mypage";
     }
 

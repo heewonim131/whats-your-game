@@ -1676,7 +1676,6 @@ h1, h2, h3, h4, h5, h6, figure {
   opacity: 0;
 }
 
-/*# sourceMappingURL=style.css.map */
 
 /*---------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------
@@ -1885,7 +1884,7 @@ button.ghost {
   margin-right: 10px;
 }
 .fh5co-contact-info {
-  margin-bottom: 50px !important;
+  margin-bottom: 60px !important;
 }
 .product-grid.product-details {
   height: 400px !important;
@@ -1954,11 +1953,10 @@ button.ghost {
 }
 .star-game {
   height: 30px;
-  left: -15px;
 }
 .game-info-name .avg-score {
   font-size: 18px;
-  margin: 0px 10px 0px -15px;
+  margin-right: 10px;
   color: #909090;
 }
 .star-review {
@@ -1975,7 +1973,6 @@ button.ghost {
   padding: 0;
   position: relative;
   z-index: 1;
-  display: flex;
   overflow: hidden;
   -webkit-text-fill-color: gold;
 }
@@ -1986,8 +1983,7 @@ button.ghost {
   padding: 0;
 }
 .star-ratings.star-game.star-game-list {
-  left: 0;
-  width: auto;
+  margin: 0 auto;
 }
 /* 리뷰 카드 */
 .review-card {
@@ -2010,6 +2006,30 @@ button.btn.review-btn {
   color: #d1c286;
   font-size: 14px;
 }
-.review-body {
-  margin: 20px 95px;
+.no-review {
+  margin: 15px;
+}
+.search input {
+  padding: 6px 10px;
+  width: 70%;
+  border: none;
+  font-size: 13px;
+  margin-top: 4px;
+  -webkit-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+}
+button.search-btn {
+  border: 0;
+  font-size: 14px;
+  padding: 8px 15px;
+}
+.product.col-md-3.col-xs-3 {
+  margin: 0;
+}
+.review-game {
+  height: 120px !important;
+}
+.desc h5 {
+  text-align: center;
 }

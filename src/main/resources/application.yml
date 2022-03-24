@@ -37,3 +37,7 @@ spring:
   # session
   session:
     store-type: jdbc
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true

@@ -29,6 +29,12 @@ public class GameService {
         return gameRepository.findAll(pageable);
     }
 
+    public Page<Game> findGamesByNameContaining(String search, Pageable pageable) {
+        int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber()) - 1;
+        pageable = PageRequest.of(page, 12);
+        return gameRepository.findGamesByNameContaining(search, pageable);
+    }
+
     public Optional<Game> findById(Long id) {
         return gameRepository.findById(id);
     }

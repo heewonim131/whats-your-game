@@ -32,14 +32,9 @@ public class GameReviewInfo {
     @OneToOne(optional = false)
     private Game game;
 
-    public void update(int reviewScore) {
-        this.avgReviewScore = reviewScore / (float) this.reviewCnt;
-        this.updatedAt = LocalDateTime.now();
-    }
-
     public void update(int reviewCnt, int reviewScore) {
-        this.reviewCnt = reviewCnt;
         this.avgReviewScore = (this.avgReviewScore * this.reviewCnt + reviewScore) / (float) reviewCnt;
+        this.reviewCnt = reviewCnt;
         this.updatedAt = LocalDateTime.now();
     }
 }

@@ -30,9 +30,7 @@ public class ReviewController {
                 .orElseThrow(() -> new IllegalArgumentException("해당 게임이 존재하지 않습니다. id="+gameId));
         review.setGame(game);
         reviewService.save(review);
-        GameReviewInfo gameReviewInfo = gameReviewInfoService.findGameReviewInfoByGameId(gameId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게임 정보가 존재하지 않습니다. id="+gameId));
-        gameReviewInfoService.update(gameId, gameReviewInfo.getReviewCnt() + 1, review.getScore());
+        gameReviewInfoService.update(gameId, 1, review.getScore());
     }
 
     @ResponseBody
@@ -46,8 +44,10 @@ public class ReviewController {
     @ResponseBody
     @PutMapping("{reviewId}")
     public void update(@PathVariable Long reviewId, Review reviewReq, @RequestParam("gameId") Long gameId) {
+        Review review = reviewService.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다. id="+reviewId));
+        gameReviewInfoService.update(gameId, 0, reviewReq.getScore()-review.getScore());
         reviewService.update(reviewId, reviewReq);
-        gameReviewInfoService.update(gameId, reviewReq.getScore());
     }
 
     @ResponseBody
@@ -56,9 +56,7 @@ public class ReviewController {
         Review review = reviewService.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다. id="+reviewId));
         reviewService.delete(reviewId);
-        GameReviewInfo gameReviewInfo = gameReviewInfoService.findGameReviewInfoByGameId(gameId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게임 정보가 존재하지 않습니다. id="+gameId));
-        gameReviewInfoService.update(gameId, gameReviewInfo.getReviewCnt() - 1, review.getScore() * (-1));
+        gameReviewInfoService.update(gameId, -1, review.getScore() * (-1));
     }
 
     @ResponseBody
@@ -87,7 +85,7 @@ public class ReviewController {
     }
 
     @ResponseBody
-    @PostMapping("{reviewId}/likeCnt")
+    @GetMapping("{reviewId}/likeCnt")
     public int likeCnt(@PathVariable Long reviewId) {
         return reviewService.findById(reviewId).get().getLikeCnt();
     }

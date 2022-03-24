@@ -13,41 +13,20 @@
                 <div class="col-md-4 col-xs-4">
                     <div id="fh5co-logo"><a href="/">What's&nbsp;your&nbsp;game?</a></div>
                 </div>
-                <div class="col-md-4 col-xs-4 text-center menu-1">
+                <div class="col-md-6 col-xs-6 text-center menu-1">
                     <ul>
-                        <li class="has-dropdown">
+                        <li>
                             <a href="/games">GAMES</a>
-                            <ul class="dropdown">
-                                <li><a href="#">인기 게임</a></li>
-                                <li><a href="#">신작 게임</a></li>
-                                <li><a href="#">전체 게임</a></li>
-                            </ul>
-                        </li>
-                        <li class="has-dropdown">
-                            <a href="/reviews">REVIEWS</a>
-                            <ul class="dropdown">
-                                <li><a href="#">인기 리뷰</a></li>
-                                <li><a href="#">신작 리뷰</a></li>
-                                <li><a href="#">전체 리뷰</a></li>
-                            </ul>
                         </li>
                         <li>
                             <a href="/users/mypage" th:text="|MY PAGE|"></a>
                         </li>
                     </ul>
                 </div>
-                <div class="col-md-4 col-xs-4 text-right hidden-xs menu-2">
+                <div class="col-md-2 col-xs-2 text-right hidden-xs menu-2">
                     <ul>
                         <li sec:authorize="!isAuthenticated()"><a href="/users" th:text="LOGIN"></a></li>
                         <li sec:authorize="isAuthenticated()"><a href="/users/logout" th:text="LOGOUT"></a></li>
-                        <li class="search">
-                            <div class="input-group">
-                                <input type="text" placeholder="Search">
-                                <span class="input-group-btn">
-						        <button class="btn btn-primary" type="button"><i class="icon-search"></i></button>
-						      </span>
-                            </div>
-                        </li>
                     </ul>
                 </div>
             </div>

@@ -30,7 +30,8 @@
                                     <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
                                 </div>
                             </div>
-                            <span class="avg-score" th:text="${game.gameReviewInfo.avgReviewScore}+' ('+${game.gameReviewInfo.reviewCnt}+')'">별점 (리뷰)</span>
+                            <span class="avg-score"
+                                  th:text="${game.gameReviewInfo.avgReviewScore}+' ('+${game.gameReviewInfo.reviewCnt}+')'">별점 (리뷰)</span>
                             <button type="button" th:value="${game.id}" name="wish" class="btn btn-primary likebtn">
                                 <i th:if="${isWished.toString().equals('false')}" class="icon-heart"></i>
                                 <i th:if="${isWished.toString().equals('true')}" class="icon-heart2"></i>
@@ -66,12 +67,13 @@
                 <div class="col-md-12 col-xs-12 col-md-offset-1 review-header">
                     <h3 class="col-md-7 col-xs-8">REVIEWS</h3>
                     <button sec:authorize="isAuthenticated()" data-toggle="modal" name="write"
-                       class="col-md-2 col-xs-offset-1 btn btn-primary btn-outline">작성</button>
+                            class="col-md-2 col-xs-offset-1 btn btn-primary btn-outline">작성
+                    </button>
                 </div>
 
                 <div class="col-md-12 col-xs-12 col-md-offset-1 review-body">
-                    <div th:if="${#lists.isEmpty(reviews)}">아직 작성된 리뷰가 없습니다.</div>
-                    <div class="col-md-10 col-xs-10 review-card" th:each="review: ${reviews}">
+                    <div class="review-card no-review" th:if="${#lists.isEmpty(reviewList)}">아직 작성된 리뷰가 없습니다.</div>
+                    <div class="col-md-10 col-xs-10 review-card" th:each="review: ${reviewList}">
                         <div>
                             <div class="col-md-11 col-xs-11">
                                 <span th:text="${review.user.name}">닉네임</span>
@@ -83,12 +85,14 @@
                                 </span>
                             </div>
                             <div class="col-md-1 col-xs-1">
-                                <button type="button" th:value="${review.id}" name="likey" class="btn btn-primary likebtn">
+                                <button type="button" th:value="${review.id}" name="likey"
+                                        class="btn btn-primary likebtn">
                                     <i class="icon-thumbs-up"></i>
                                     <span th:text="${review.likeCnt}">추천수</span>
                                 </button>
                             </div>
                             <div class="star-ratings star-review">
+                                <input type="hidden" th:value="${review.score}">
                                 <div class="star-ratings-fill space-x-2 text-lg"
                                      th:style="'width: '+${review.score *20}+'%'">
                                     <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
@@ -163,14 +167,14 @@
             $("#review-modal").modal();
         });
 
-        $("button[name='update']").click(function (){
+        $("button[name='update']").click(function () {
             action = 'update';
             rid = this.value;
 
             // content
             var row = $(this).parent().parent().parent();
-            var score = '#'+row.children().eq(3).val()+'-star';
-            var content = row.children().eq(4).text();
+            var score = '#' + row.children().eq(2).children().eq(0).val() + '-star';
+            var content = row.children().eq(3).text();
 
             $("#modal-title").text("리뷰 수정");
             $(score).prop("checked", true);
@@ -216,27 +220,26 @@
                     url: "/reviews/reviewDuplicateCheck",
                     data: {
                         gameId: gid
-                    },
-                    success: function (result) {
-                        if (result == 1) {
-                            $.ajax({
-                                type: 'POST',
-                                url: "/reviews",
-                                data: {
-                                    gameId: gid,
-                                    score: score,
-                                    content: content
-                                },
-                                success: function (data) {
-                                    alert("작성하신 리뷰가 등록되었습니다.");
-                                    $("#review-modal").modal('toggle');
-                                    location.reload();
-                                }
-                            });
-                        } else {
-                            alert("이미 리뷰를 작성하셨습니다.");
-                            $("#review-modal").modal('toggle');
-                        }
+                    }
+                }).then(function (result) {
+                    if (result == 1) {
+                        return $.ajax({
+                            type: 'POST',
+                            url: "/reviews",
+                            data: {
+                                gameId: gid,
+                                score: score,
+                                content: content
+                            },
+                            success: function (data) {
+                                alert("작성하신 리뷰가 등록되었습니다.");
+                                $("#review-modal").modal('toggle');
+                                location.reload();
+                            }
+                        });
+                    } else {
+                        alert("이미 리뷰를 작성하셨습니다.");
+                        $("#review-modal").modal('toggle');
                     }
                 });
             } else if (action == 'update') {
@@ -265,57 +268,49 @@
             var span = $(this).children().eq(1);
             $.ajax({
                 type: 'POST',
-                url: "/reviews/likeLoginCheck",
-                async:false,
-                success: function (result) {
-                    if (result == 1) {
-                        $.ajax({
-                            type: 'POST',
-                            url: "/reviews/" + rid + "/likeDuplicateCheck",
-                            async:false,
-                            success: function (result) {
-                                if (result == 2) {
-                                    alert("자신이 쓴 리뷰는 추천할 수 없습니다.");
-                                } else if (result == 1) {
-                                    // 추천
-                                    $.ajax({
-                                        type: 'POST',
-                                        url: "/reviews/" + rid + "/like",
-                                        async:false,
-                                        success: function () {
-                                            console.log("추천됨");
-                                        }
-                                    });
-                                } else {
-                                    // 추천 취소
-                                    $.ajax({
-                                        type: 'DELETE',
-                                        url: "/reviews/" + rid + "/dislike",
-                                        async:false,
-                                        success: function () {
-                                            console.log("삭제됨");
-                                        }
-                                    });
-                                }
-                            },
-                            complete: function () {
-                                // 추천수
-                                $.ajax({
-                                    type: 'POST',
+                url: "/reviews/likeLoginCheck"
+            }).then(function (result) {
+                if (result == 1) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "/reviews/" + rid + "/likeDuplicateCheck"
+                    }).success(function (result) {
+                        if (result == 2) {
+                            alert("자신이 쓴 리뷰는 추천할 수 없습니다.");
+                        } else if (result == 1) {
+                            // 추천
+                            $.ajax({
+                                type: 'POST',
+                                url: "/reviews/" + rid + "/like"
+                            }).then(function (result) {
+                                return $.ajax({
+                                    type: 'GET',
                                     url: "/reviews/" + rid + "/likeCnt",
-                                    async:false,
                                     success: function (result) {
                                         span.replaceWith("<span>" + result + "</span>");
                                     }
                                 });
-                            }
-                        });
-                    } else {
-                        alert("로그인이 필요합니다.");
-                    }
+                            });
+                        } else {
+                            // 추천 취소
+                            $.ajax({
+                                type: 'DELETE',
+                                url: "/reviews/" + rid + "/dislike"
+                            }).then(function (result) {
+                                return $.ajax({
+                                    type: 'GET',
+                                    url: "/reviews/" + rid + "/likeCnt",
+                                    success: function (result) {
+                                        span.replaceWith("<span>" + result + "</span>");
+                                    }
+                                });
+                            });
+                        }
+                    })
+                } else {
+                    alert("로그인이 필요합니다.");
                 }
             });
-
         });
     </script>
     <!-- 게임 찜하기 -->
@@ -325,36 +320,30 @@
             var i = $(this).children().eq(0);
             $.ajax({
                 type: 'POST',
-                url: "/games/wishLoginCheck",
-                async:false,
-                success: function (result) {
-                    if (result == 1) {
-                        if (i.hasClass('icon-heart')) {
-                            // 찜
-                            $.ajax({
-                                type: 'POST',
-                                url: "/games/" + gid + "/wish",
-                                async:false,
-                                success: function () {
-                                    console.log("찜");
-                                    i.attr('class', 'icon-heart2');
-                                }
-                            });
-                        } else {
-                            // 찜 취소
-                            $.ajax({
-                                type: 'DELETE',
-                                url: "/games/" + gid + "/wish",
-                                async:false,
-                                success: function () {
-                                    console.log("찜취소");
-                                    i.attr('class', 'icon-heart');
-                                }
-                            });
-                        }
+                url: "/games/wishLoginCheck"
+            }).success(function (result) {
+                if (result == 1) {
+                    if (i.hasClass('icon-heart')) {
+                        // 찜
+                        $.ajax({
+                            type: 'POST',
+                            url: "/games/" + gid + "/wish",
+                            success: function () {
+                                i.attr('class', 'icon-heart2');
+                            }
+                        });
                     } else {
-                        alert("로그인이 필요합니다.");
+                        // 찜 취소
+                        $.ajax({
+                            type: 'DELETE',
+                            url: "/games/" + gid + "/wish",
+                            success: function () {
+                                i.attr('class', 'icon-heart');
+                            }
+                        });
                     }
+                } else {
+                    alert("로그인이 필요합니다.");
                 }
             });
         });
