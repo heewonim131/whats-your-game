@@ -33,7 +33,7 @@ public class GameReviewInfo {
     private Game game;
 
     public void update(int reviewCnt, int reviewScore) {
-        this.avgReviewScore = (this.avgReviewScore * this.reviewCnt + reviewScore) / (float) reviewCnt;
+        this.avgReviewScore = (reviewCnt == 0)? 0: (this.avgReviewScore * this.reviewCnt + reviewScore) / (float) reviewCnt;
         this.reviewCnt = reviewCnt;
         this.updatedAt = LocalDateTime.now();
     }

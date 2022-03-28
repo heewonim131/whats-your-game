@@ -1,5 +1,7 @@
 package com.example.whatsyourgame.service;
 
+import com.example.whatsyourgame.entity.Game;
+import com.example.whatsyourgame.entity.User;
 import com.example.whatsyourgame.entity.Wish;
 import com.example.whatsyourgame.repository.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,10 @@ public class WishService {
         return wishRepository.findWishByUserIdAndGameId(userId, gameId);
     }
 
-    public Wish wish(Wish wish) {
+    public Wish wish(User user, Game game) {
+        Wish wish = new Wish();
+        wish.setUser(user);
+        wish.setGame(game);
         wish.setCreatedAt(LocalDateTime.now());
         wish.setUpdatedAt(LocalDateTime.now());
         return wishRepository.save(wish);

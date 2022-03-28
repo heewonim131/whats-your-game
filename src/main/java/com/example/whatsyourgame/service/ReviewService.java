@@ -43,23 +43,17 @@ public class ReviewService {
         return reviewRepository.findReviewsByGameIdOrderByCreatedAtDesc(gameId);
     }
 
-    public Long update(Long reviewId, Review reviewReq) {
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다. id=" + reviewId));
+    public Long update(Review review, Review reviewReq) {
         review.update(reviewReq.getScore(), reviewReq.getContent());
-        return reviewId;
+        return review.getId();
     }
 
-    public void delete(Long reviewId) {
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다. id=" + reviewId));
+    public void delete(Review review) {
         reviewRepository.delete(review);
     }
 
-    public Long like(Long reviewId, int likeCnt) {
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다. id=" + reviewId));
-        review.like(likeCnt);
-        return reviewId;
+    public Long updateLikeCnt(Review review, int likeCnt) {
+        review.updateLikeCnt(review.getLikeCnt() + likeCnt);
+        return review.getId();
     }
 }

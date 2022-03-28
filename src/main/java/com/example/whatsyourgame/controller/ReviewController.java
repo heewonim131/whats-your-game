@@ -21,6 +21,14 @@ public class ReviewController {
     private final GameReviewInfoService gameReviewInfoService;
 
     @ResponseBody
+    @PostMapping("reviewDuplicateCheck")
+    public int reviewDuplicateCheck(@RequestParam("gameId") Long gameId) {
+        User user = userService.currentLoginUser()
+                .orElseThrow(() -> new IllegalArgumentException("로그인 유저가 존재하지 않습니다."));
+        return reviewService.reviewDuplicateCheck(gameId, user.getId());
+    }
+
+    @ResponseBody
     @PostMapping("")
     public void write(@RequestParam("gameId") Long gameId, Review review) {
         User user = userService.currentLoginUser()
@@ -30,15 +38,9 @@ public class ReviewController {
                 .orElseThrow(() -> new IllegalArgumentException("해당 게임이 존재하지 않습니다. id="+gameId));
         review.setGame(game);
         reviewService.save(review);
-        gameReviewInfoService.update(gameId, 1, review.getScore());
-    }
-
-    @ResponseBody
-    @PostMapping("reviewDuplicateCheck")
-    public int reviewDuplicateCheck(@RequestParam("gameId") Long gameId) {
-        User user = userService.currentLoginUser()
-                .orElseThrow(() -> new IllegalArgumentException("로그인 유저가 존재하지 않습니다."));
-        return reviewService.reviewDuplicateCheck(gameId, user.getId());
+        GameReviewInfo gameReviewInfo = gameReviewInfoService.findGameReviewInfoByGameId(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게임 정보가 존재하지 않습니다. id=" + gameId));
+        gameReviewInfoService.update(gameReviewInfo, 1, review.getScore());
     }
 
     @ResponseBody
@@ -46,8 +48,10 @@ public class ReviewController {
     public void update(@PathVariable Long reviewId, Review reviewReq, @RequestParam("gameId") Long gameId) {
         Review review = reviewService.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다. id="+reviewId));
-        gameReviewInfoService.update(gameId, 0, reviewReq.getScore()-review.getScore());
-        reviewService.update(reviewId, reviewReq);
+        GameReviewInfo gameReviewInfo = gameReviewInfoService.findGameReviewInfoByGameId(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게임 정보가 존재하지 않습니다. id=" + gameId));
+        gameReviewInfoService.update(gameReviewInfo, 0, reviewReq.getScore()-review.getScore());
+        reviewService.update(review, reviewReq);
     }
 
     @ResponseBody
@@ -55,8 +59,10 @@ public class ReviewController {
     public void delete(@PathVariable Long reviewId, @RequestParam("gameId") Long gameId) {
         Review review = reviewService.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다. id="+reviewId));
-        reviewService.delete(reviewId);
-        gameReviewInfoService.update(gameId, -1, review.getScore() * (-1));
+        GameReviewInfo gameReviewInfo = gameReviewInfoService.findGameReviewInfoByGameId(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게임 정보가 존재하지 않습니다. id=" + gameId));
+        gameReviewInfoService.update(gameReviewInfo, -1, review.getScore() * (-1));
+        reviewService.delete(review);
     }
 
     @ResponseBody
@@ -69,19 +75,33 @@ public class ReviewController {
     @ResponseBody
     @PostMapping("{reviewId}/likeDuplicateCheck")
     public int likeDuplicateCheck(@PathVariable Long reviewId) {
-        return likeyService.likeDuplicateCheck(reviewId);
+        User user = userService.currentLoginUser()
+                .orElseThrow(() -> new IllegalArgumentException("로그인 유저가 존재하지 않습니다."));
+        Review review = reviewService.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다. id=" + reviewId));
+        return likeyService.likeDuplicateCheck(user, review);
     }
 
     @ResponseBody
     @PostMapping("{reviewId}/like")
     public void like(@PathVariable Long reviewId) {
-        likeyService.like(reviewId);
+        User user = userService.currentLoginUser()
+                .orElseThrow(() -> new IllegalArgumentException("로그인 유저가 존재하지 않습니다."));
+        Review review = reviewService.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다. id="+reviewId));
+        likeyService.like(user, review);
+        reviewService.updateLikeCnt(review, 1);
     }
 
     @ResponseBody
     @DeleteMapping("{reviewId}/dislike")
     public void dislike(@PathVariable Long reviewId) {
-        likeyService.dislike(reviewId);
+        User user = userService.currentLoginUser()
+                .orElseThrow(() -> new IllegalArgumentException("로그인 유저가 존재하지 않습니다."));
+        Review review = reviewService.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다. id="+reviewId));
+        likeyService.dislike(user, review);
+        reviewService.updateLikeCnt(review, -1);
     }
 
     @ResponseBody

@@ -55,7 +55,7 @@ public class Review {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public void like(int likeCnt) {
+    public void updateLikeCnt(int likeCnt) {
         this.likeCnt = likeCnt;
     }
 }

@@ -72,10 +72,7 @@ public class GameController {
                 .orElseThrow(() -> new IllegalArgumentException("로그인 유저가 존재하지 않습니다."));
         Game game = gameService.findById(gameId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게임이 존재하지 않습니다. id="+gameId));
-        Wish wish = new Wish();
-        wish.setUser(user);
-        wish.setGame(game);
-        wishService.wish(wish);
+        wishService.wish(user, game);
     }
 
     @ResponseBody

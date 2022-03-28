@@ -13,7 +13,7 @@
                     <h3>작성한 리뷰</h3>
             </div>
             <div class="col-md-12 col-xs-12 review-body">
-                <div class="review-card no-review" th:if="${#lists.isEmpty(reviewList)}">아직 작성한 리뷰가 없습니다.</div>
+                <div class="review-card" th:if="${#lists.isEmpty(reviewList)}">아직 작성한 리뷰가 없습니다.</div>
                 <div class="col-md-12 col-xs-12 review-card" th:each="review: ${reviewList}">
                     <div class="product col-md-3 col-xs-3">
                         <a th:href="'/games/'+${review.game.id}" class="icon">

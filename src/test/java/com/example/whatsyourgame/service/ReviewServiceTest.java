@@ -48,9 +48,10 @@ public class ReviewServiceTest {
         review.setGame(new Game());
         reviewService.save(review);
 
-        review.setScore(1);
-        review.setContent("리뷰 수정");
-        reviewService.update(review.getId(), review);
+        Review reviewReq = new Review();
+        reviewReq.setScore(1);
+        reviewReq.setContent("리뷰 수정");
+        reviewService.update(review, reviewReq);
 
         Review result = reviewRepository.findById(review.getId()).orElse(null);
         assertEquals(1, result.getScore());
@@ -66,7 +67,7 @@ public class ReviewServiceTest {
         review.setGame(new Game());
         reviewService.save(review);
 
-        reviewService.delete(review.getId());
+        reviewService.delete(review);
         List<Review> list = reviewRepository.findAll();
         assertEquals(0, list.size());
     }

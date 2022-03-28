@@ -3,14 +3,12 @@ package com.example.whatsyourgame.config.security;
 import com.example.whatsyourgame.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -40,14 +38,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .authorizeRequests(request->
-//                                request.antMatchers("/**").permitAll()
                                 request
                                         .antMatchers("/", "/css/**", "/fonts/**", "/images/**", "/js/**", "/sass/**",
                                                 "/favicon.ico", "/resources/**", "/error").permitAll()
                                         .antMatchers("/users", "/users/emailDuplicateCheck", "/users/login", "/users/login-error").permitAll()
-                                        .antMatchers("/games/**", "/reviews/**").permitAll()
+                                        .antMatchers("/games/**", "/reviews").permitAll()
                                         .antMatchers("/users/mypage").hasRole("USER")
-
                                 .anyRequest().authenticated()
                 )
                 .formLogin(login->
@@ -66,15 +62,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .oauth2Login(oauth->
                         oauth.userInfoEndpoint()
                                 .userService(customOAuth2UserService)
-                )
-        ;
-    }
-
-    @Override
-    public void configure(WebSecurity web) {
-        web.ignoring()
-                .requestMatchers(
-                        PathRequest.toStaticResources().atCommonLocations()
                 )
         ;
     }

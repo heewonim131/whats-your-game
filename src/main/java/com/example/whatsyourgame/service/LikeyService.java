@@ -16,29 +16,16 @@ public class LikeyService {
 
     @Autowired
     private LikeyRepository likeyRepository;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private ReviewService reviewService;
 
     // 추천 중복 확인
-    public int likeDuplicateCheck(Long reviewId) {
-        User user = userService.currentLoginUser()
-                .orElseThrow(() -> new IllegalArgumentException("로그인 유저가 존재하지 않습니다."));
-        Review review = reviewService.findById(reviewId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다. id=" + reviewId));
+    public int likeDuplicateCheck(User user, Review review) {
         if (user.getId().equals(review.getUser().getId())) return 2;
-        else if (likeyRepository.findLikeyByUserIdAndReviewId(user.getId(), reviewId).isEmpty()) return 1;
+        else if (likeyRepository.findLikeyByUserIdAndReviewId(user.getId(), review.getId()).isEmpty()) return 1;
         else return 0;
     }
 
-    public Likey like(Long reviewId) {
-        Review review = reviewService.findById(reviewId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다. id=" + reviewId));
-        reviewService.like(reviewId, review.getLikeCnt()+1);
-
+    public Likey like(User user, Review review) {
         Likey likey = new Likey();
-        User user = userService.currentLoginUser().orElse(null);
         likey.setUser(user);
         likey.setReview(review);
         likey.setCreatedAt(LocalDateTime.now());
@@ -46,13 +33,8 @@ public class LikeyService {
         return likeyRepository.save(likey);
     }
 
-    public void dislike(Long reviewId) {
-        Review review = reviewService.findById(reviewId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다. id=" + reviewId));
-        reviewService.like(reviewId, review.getLikeCnt()-1);
-
-        User user = userService.currentLoginUser().orElse(null);
-        Likey likey = likeyRepository.findLikeyByUserIdAndReviewId(user.getId(), reviewId)
+    public void dislike(User user, Review review) {
+        Likey likey = likeyRepository.findLikeyByUserIdAndReviewId(user.getId(), review.getId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 추천이 존재하지 않습니다."));
         likeyRepository.delete(likey);
     }
