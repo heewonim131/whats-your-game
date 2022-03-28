@@ -3,27 +3,27 @@ package com.example.whatsyourgame.service;
 import com.example.whatsyourgame.entity.Game;
 import com.example.whatsyourgame.entity.Review;
 import com.example.whatsyourgame.entity.User;
-import com.example.whatsyourgame.repository.GameRepository;
 import com.example.whatsyourgame.repository.ReviewRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.AdditionalAnswers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class ReviewServiceTest {
 
-    @Autowired
+    @InjectMocks
     private ReviewService reviewService;
 
-    @Autowired
+    @Mock
     private ReviewRepository reviewRepository;
 
     @Test
@@ -33,10 +33,14 @@ public class ReviewServiceTest {
         review.setContent("리뷰 등록");
         review.setUser(new User());
         review.setGame(new Game());
-        reviewService.save(review);
 
-        List<Review> list = reviewRepository.findAll();
-        assertEquals(1, list.size());
+        when(this.reviewRepository.save(any(Review.class)))
+                .then(AdditionalAnswers.returnsFirstArg());
+
+        Review result = this.reviewService.save(review);
+
+        assertEquals(5, result.getScore());
+        assertEquals("리뷰 등록", result.getContent());
     }
 
     @Test
@@ -46,16 +50,15 @@ public class ReviewServiceTest {
         review.setContent("리뷰 등록");
         review.setUser(new User());
         review.setGame(new Game());
-        reviewService.save(review);
+        this.reviewService.save(review);
 
         Review reviewReq = new Review();
         reviewReq.setScore(1);
         reviewReq.setContent("리뷰 수정");
-        reviewService.update(review, reviewReq);
+        this.reviewService.update(review, reviewReq);
 
-        Review result = reviewRepository.findById(review.getId()).orElse(null);
-        assertEquals(1, result.getScore());
-        assertEquals("리뷰 수정", result.getContent());
+        assertEquals(1, review.getScore());
+        assertEquals("리뷰 수정", review.getContent());
     }
 
     @Test
@@ -65,9 +68,9 @@ public class ReviewServiceTest {
         review.setContent("리뷰 등록");
         review.setUser(new User());
         review.setGame(new Game());
-        reviewService.save(review);
+        this.reviewService.save(review);
 
-        reviewService.delete(review);
+        this.reviewService.delete(review);
         List<Review> list = reviewRepository.findAll();
         assertEquals(0, list.size());
     }
