@@ -1,9 +1,6 @@
 package com.example.whatsyourgame.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -14,20 +11,19 @@ import java.util.List;
 
 @Data
 @Entity
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString(callSuper = true)
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NonNull
     private int score;
 
-    @NonNull
     private String content;
 
-    @NonNull
     private int likeCnt;
 
     @CreatedDate
@@ -47,6 +43,7 @@ public class Review {
     @OneToMany
     @JoinColumn(name = "review_id")
     @ToString.Exclude
+    @Builder.Default
     private List<Likey> likeys = new ArrayList<>();
 
     public void update(int score, String content) {

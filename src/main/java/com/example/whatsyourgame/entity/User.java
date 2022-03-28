@@ -20,16 +20,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper = true)
-//@EqualsAndHashCode(callSuper = true)
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NonNull
     private String name;
 
-    @NonNull
     @Column(unique = true)
     private String email;
 
@@ -46,16 +43,19 @@ public class User implements UserDetails {
     @OneToMany
     @JoinColumn(name = "user_id")
     @ToString.Exclude
+    @Builder.Default
     private List<Review> reviews = new ArrayList<>();
 
     @OneToMany
     @JoinColumn(name = "user_id")
     @ToString.Exclude
+    @Builder.Default
     private List<Likey> likeys = new ArrayList<>();
 
     @OneToMany
     @JoinColumn(name = "user_id")
     @ToString.Exclude
+    @Builder.Default
     private List<Wish> wishs = new ArrayList<>();
 
     public User update(String name) {

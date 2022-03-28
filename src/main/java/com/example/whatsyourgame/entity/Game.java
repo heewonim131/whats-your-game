@@ -20,25 +20,18 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NonNull
     private String name;
 
-    @NonNull
     private String description;
 
-    @NonNull
     private String img;
 
-    @NonNull
     private String genre;
 
-    @NonNull
     private String platform;
 
-    @NonNull
     private String site;
 
-    @NonNull
     private LocalDate releasedAt;
 
     @CreatedDate
@@ -50,11 +43,13 @@ public class Game {
     @OneToMany
     @JoinColumn(name = "game_id")
     @ToString.Exclude
+    @Builder.Default
     private List<Review> reviews = new ArrayList<>();
 
     @OneToMany
     @JoinColumn(name = "game_id")
     @ToString.Exclude
+    @Builder.Default
     private List<Wish> wishs = new ArrayList<>();
 
     @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })

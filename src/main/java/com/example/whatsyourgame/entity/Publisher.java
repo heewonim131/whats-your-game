@@ -19,7 +19,6 @@ public class Publisher {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NonNull
     private String name;
 
     @CreatedDate
@@ -31,5 +30,6 @@ public class Publisher {
     @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "publisher_id")
     @ToString.Exclude
+    @Builder.Default
     private List<Game> games = new ArrayList<>();
 }
