@@ -6,6 +6,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLInnoDBDialect
+    open-in-view: false
   # session
   session:
     store-type: jdbc
