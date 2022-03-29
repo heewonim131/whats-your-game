@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/basic}">
+      layout:decorate="~{/layout/basic}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.ultraq.net.nz/thymeleaf/layout ">
 <th:block layout:fragment="title">
     <title>전체 게임 | What's Your Game?</title>
 </th:block>
@@ -10,7 +11,7 @@
         <div id="fh5co-product">
             <div class="fh5co-contact-info">
                 <div class="col-md-9 animate-box fadeInUp animated-fast">
-                        <h3>전체 게임</h3>
+                    <h3>전체 게임</h3>
                 </div>
                 <div class="search col-md-3">
                     <form th:action="@{'/games'}" method="POST" class="input-group">
@@ -40,7 +41,8 @@
                                     <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
                                 </div>
                             </div>
-                            <span class="avg-score" th:text="${game.gameReviewInfo.avgReviewScore}+' ('+${game.gameReviewInfo.reviewCnt}+')'">별점 (리뷰)</span>
+                            <span class="avg-score"
+                                  th:text="${game.gameReviewInfo.avgReviewScore}+' ('+${game.gameReviewInfo.reviewCnt}+')'">별점 (리뷰)</span>
                         </div>
                     </div>
                 </div>
@@ -61,7 +63,8 @@
                         </a>
                     </li>
 
-                    <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == gameList.number + 1} ? 'active'">
+                    <li th:each="page: ${#numbers.sequence(start, last)}"
+                        th:class="${page == gameList.number + 1} ? 'active'">
                         <a th:text="${page}" th:href="@{/games(page=${page})}"></a>
                     </li>
 
