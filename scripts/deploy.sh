@@ -9,7 +9,7 @@ cp $REPOSITORY/zip/*.jar $REPOSITORY/
 
 echo "> 현재 구동중인 애플리케이션 pid 확인"
 
-CURRENT_PID=$(pgrep -f ${PROJECT_NAME}*.jar)
+CURRENT_PID=$(pgrep -fl whats-your-game | grep jar | awk '{print $1}')
 
 echo "현재 구동중인 어플리케이션 pid: $CURRENT_PID"
 
@@ -23,10 +23,17 @@ fi
 
 echo "> 새 어플리케이션 배포"
 
-JAR_NAME=$(ls $REPOSITORY/ | grep *.jar | tail -n 1)
+JAR_NAME=$(ls -tr $REPOSITORY/*.jar | tail -n 1)
 
 echo "> JAR Name: $JAR_NAME"
 
+echo "> $JAR_NAME 에 실행권한 추가"
+
+chmod +x $JAR_NAME
+
+echo "> $JAR_NAME 실행"
+
 nohup java -jar \
-  -Dspring.config.location=classpath:/application.yml,/home/ec2-user/app/application-oauth.yml,/home/ec2-user/app/application-db.yml \
-  /home/ec2-user/app/step2/whats-your-game-0.0.1-SNAPSHOT.jar 2>&1 &
+    -Dspring.config.location=classpath:/application.yml,classpath:/application-real.yml,/home/ec2-user/app/application-oauth.yml,/home/ec2-user/app/application-db.yml \
+    -Dspring.profiles.active=real \
+    /home/ec2-user/app/step2/whats-your-game-1.0.1-SNAPSHOT.jar 2>&1 &
