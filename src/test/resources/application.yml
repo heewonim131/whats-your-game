@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://whatsyourgame.czegcb2zo84j.ap-northeast-2.rds.amazonaws.com:3306/whatsyourgame
+    username: admin
+    password: asdf9876
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLInnoDBDialect
+  session:
+    store-type: jdbc
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: test
+            clientSecret: test
+            scope:
+              - profile
+              - email
