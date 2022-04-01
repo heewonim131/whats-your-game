@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: real, real1, real2, oauth, db
+    include: real1, oauth, db
   config:
     use-legacy-processing: true
   # JPA
