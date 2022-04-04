@@ -22,7 +22,7 @@ public class ReviewController {
 
     @ResponseBody
     @PostMapping("reviewDuplicateCheck")
-    public int reviewDuplicateCheck(@RequestParam("gameId") Long gameId) {
+    public boolean reviewDuplicateCheck(@RequestParam("gameId") Long gameId) {
         User user = userService.currentLoginUser()
                 .orElseThrow(() -> new IllegalArgumentException("로그인 유저가 존재하지 않습니다."));
         return reviewService.reviewDuplicateCheck(gameId, user.getId());
@@ -41,6 +41,18 @@ public class ReviewController {
         GameReviewInfo gameReviewInfo = gameReviewInfoService.findGameReviewInfoByGameId(gameId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게임 정보가 존재하지 않습니다. id=" + gameId));
         gameReviewInfoService.update(gameReviewInfo, 1, review.getScore());
+    }
+
+    // 수정삭제 권한 확인
+    @ResponseBody
+    @GetMapping("{reviewId}/checkReviewer")
+    public boolean checkReviewer(@PathVariable Long reviewId) {
+        User user = userService.currentLoginUser()
+                .orElseThrow(() -> new IllegalArgumentException("로그인 유저가 존재하지 않습니다."));
+        Review review = reviewService.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다. id=" + reviewId));
+        return user.getId().equals(review.getUser().getId());
+
     }
 
     @ResponseBody
@@ -107,7 +119,9 @@ public class ReviewController {
     @ResponseBody
     @GetMapping("{reviewId}/likeCnt")
     public int likeCnt(@PathVariable Long reviewId) {
-        return reviewService.findById(reviewId).get().getLikeCnt();
+        Review review = reviewService.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다. id="+reviewId));
+        return review.getLikeCnt();
     }
 
 }

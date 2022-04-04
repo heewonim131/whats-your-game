@@ -62,5 +62,4 @@ public class UserController {
         model.addAttribute("reviewList", reviewList);
         return "mypage";
     }
-
 }

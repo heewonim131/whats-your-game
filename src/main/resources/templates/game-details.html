@@ -74,35 +74,31 @@
                 <div class="col-md-12 col-xs-12 col-md-offset-1 review-body">
                     <div class="review-card no-review" th:if="${#lists.isEmpty(reviewList)}">아직 작성된 리뷰가 없습니다.</div>
                     <div class="col-md-10 col-xs-10 review-card" th:each="review: ${reviewList}">
-                        <div>
-                            <div class="col-md-11 col-xs-11">
-                                <span th:text="${review.user.name}">닉네임</span>
-                                <span>|</span>
-                                <small th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd HH:mm')}">날짜</small>
-                                <span th:if="${user?.id}==${review.user.id}">
-                                    <button th:value="${review.id}" class="btn review-btn" name="update">수정</button>
-                                    <button th:value="${review.id}" class="btn review-btn" name="delete">삭제</button>
-                                </span>
-                            </div>
-                            <div class="col-md-1 col-xs-1">
-                                <button type="button" th:value="${review.id}" name="likey"
-                                        class="btn btn-primary likebtn">
-                                    <i class="icon-thumbs-up"></i>
-                                    <span th:text="${review.likeCnt}">추천수</span>
-                                </button>
-                            </div>
-                            <div class="star-ratings star-review">
-                                <input type="hidden" th:value="${review.score}">
-                                <div class="star-ratings-fill space-x-2 text-lg"
-                                     th:style="'width: '+${review.score *20}+'%'">
-                                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-                                </div>
-                                <div class="star-ratings-base space-x-2 text-lg">
-                                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-                                </div>
-                            </div>
-                            <div class="col-md-12 col-xs-12 review-content" th:text="${review.content}">리뷰 내용</div>
+                        <div class="col-md-11 col-xs-11">
+                            <span th:text="${review.user.name}">닉네임</span>
+                            <span>|</span>
+                            <small th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd HH:mm')}">날짜</small>
+                            <button th:value="${review.id}" class="btn review-btn" name="update">수정</button>
+                            <button th:value="${review.id}" class="btn review-btn" name="delete">삭제</button>
                         </div>
+                        <div class="col-md-1 col-xs-1">
+                            <button type="button" th:value="${review.id}" name="likey"
+                                    class="btn btn-primary likebtn">
+                                <i class="icon-thumbs-up"></i>
+                                <span th:text="${review.likeCnt}">추천수</span>
+                            </button>
+                        </div>
+                        <div class="star-ratings star-review">
+                            <input type="hidden" th:value="${review.score}">
+                            <div class="star-ratings-fill space-x-2 text-lg"
+                                 th:style="'width: '+${review.score *20}+'%'">
+                                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                            </div>
+                            <div class="star-ratings-base space-x-2 text-lg">
+                                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-xs-12 review-content" th:text="${review.content}">리뷰 내용</div>
                     </div>
                 </div>
             </div>
@@ -162,46 +158,77 @@
         var gid = $("#gameId").val();
 
         $("button[name='write']").click(function () {
-            action = 'write';
-            $("#modal-title").text("리뷰 작성");
-            $("#review-modal").modal();
+            $.ajax({
+                type: 'POST',
+                url: "/reviews/reviewDuplicateCheck",
+                data: {
+                    gameId: gid
+                },
+                success: function (data) {
+                    if (data) {
+                        action = 'write';
+                        $("#modal-title").text("리뷰 작성");
+                        $("#review-modal").modal();
+                    } else {
+                        alert("이미 리뷰를 작성하셨습니다.");
+                    }
+                }
+            });
         });
 
         $("button[name='update']").click(function () {
-            action = 'update';
             rid = this.value;
-
-            // content
-            var row = $(this).parent().parent().parent();
+            action = 'update';
+            var row = $(this).parent().parent();
             var score = '#' + row.children().eq(2).children().eq(0).val() + '-star';
             var content = row.children().eq(3).text();
 
-            $("#modal-title").text("리뷰 수정");
-            $(score).prop("checked", true);
-            $("#content").val(content);
-            $("#review-modal").modal();
+            // 리뷰작성자 확인
+            $.ajax({
+                url: "/reviews/" + rid + "/checkReviewer",
+                success: function (data) {
+                    if (data == true) {
+                        $("#modal-title").text("리뷰 수정");
+                        $(score).prop("checked", true);
+                        $("#content").val(content);
+                        $("#review-modal").modal();
+                    } else {
+                        alert("작성자만 수정할 수 있습니다.");
+                    }
+                }
+            });
         });
 
         $("button[name='delete']").click(function () {
             rid = this.value;
-            if (confirm('정말 리뷰를 삭제하시겠습니까?') == true) {
-                $.ajax({
-                    type: 'DELETE',
-                    url: "/reviews/" + rid,
-                    data: {
-                        reviewId: rid,
-                        gameId: gid
-                    },
-                    success: function (data) {
-                        alert("삭제되었습니다.");
-                        location.reload();
-                    },
-                    error: function (error) {
-                        alert("오류가 발생하였습니다.");
-                        console.log(error);
+            // 리뷰작성자 확인
+            $.ajax({
+                url: "/reviews/" + rid + "/checkReviewer",
+                success: function (data) {
+                    if (data == true) {
+                        if (confirm('정말 리뷰를 삭제하시겠습니까?') == true) {
+                            $.ajax({
+                                type: 'DELETE',
+                                url: "/reviews/" + rid,
+                                data: {
+                                    reviewId: rid,
+                                    gameId: gid
+                                },
+                                success: function (data) {
+                                    alert("삭제되었습니다.");
+                                    location.reload();
+                                },
+                                error: function (error) {
+                                    alert("오류가 발생하였습니다.");
+                                    console.log(error);
+                                }
+                            });
+                        }
+                    } else {
+                        alert("작성자만 삭제할 수 있습니다.");
                     }
-                });
-            }
+                }
+            });
         });
 
         function checkReviewForm() {
@@ -217,29 +244,16 @@
             if (action == 'write') {
                 $.ajax({
                     type: 'POST',
-                    url: "/reviews/reviewDuplicateCheck",
+                    url: "/reviews",
                     data: {
-                        gameId: gid
-                    }
-                }).then(function (result) {
-                    if (result == 1) {
-                        return $.ajax({
-                            type: 'POST',
-                            url: "/reviews",
-                            data: {
-                                gameId: gid,
-                                score: score,
-                                content: content
-                            },
-                            success: function (data) {
-                                alert("작성하신 리뷰가 등록되었습니다.");
-                                $("#review-modal").modal('toggle');
-                                location.reload();
-                            }
-                        });
-                    } else {
-                        alert("이미 리뷰를 작성하셨습니다.");
+                        gameId: gid,
+                        score: score,
+                        content: content
+                    },
+                    success: function (data) {
+                        alert("작성하신 리뷰가 등록되었습니다.");
                         $("#review-modal").modal('toggle');
+                        location.reload();
                     }
                 });
             } else if (action == 'update') {

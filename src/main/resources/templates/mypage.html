@@ -9,11 +9,11 @@
 <th:block layout:fragment="content">
     <div class="container">
         <div class="row-mypage">
-            <div class="col-md-4 animate-box fadeInUp animated-fast">
+            <div class="col-md-12 col-xs-12 animate-box fadeInUp animated-fast">
                     <h3>작성한 리뷰</h3>
             </div>
             <div class="col-md-12 col-xs-12 review-body">
-                <div class="review-card" th:if="${#lists.isEmpty(reviewList)}">아직 작성한 리뷰가 없습니다.</div>
+                <div class="more-info" th:if="${#lists.isEmpty(reviewList)}">아직 작성한 리뷰가 없습니다.</div>
                 <div class="col-md-12 col-xs-12 review-card" th:each="review: ${reviewList}">
                     <div class="product col-md-3 col-xs-3">
                         <a th:href="'/games/'+${review.game.id}" class="icon">
@@ -21,7 +21,7 @@
                             </div>
                         </a>
                         <div class="desc">
-                            <h5>리그 오브 레전드</h5>
+                            <h5 th:text="${review.game.name}">게임 제목</h5>
                         </div>
                     </div>
                     <div class="col-md-9 col-xs-9">
@@ -53,17 +53,13 @@
             </div>
         </div>
         <div id="fh5co-product">
-            <div class="col-md-12 animate-box fadeInUp animated-fast">
-                <div class="fh5co-contact-info">
-                    <h3>찜한 게임</h3>
-                </div>
+            <div class="col-md-12 col-xs-12 animate-box fadeInUp animated-fast">
+                <h3>찜한 게임</h3>
             </div>
-            <div class="row col-md-12">
-                <div class="more-info" th:if="${#lists.isEmpty(wishList)}">아직 찜한 게임이 없습니다.
-                    <p class="more-info"><a href="/games" class="btn btn-primary btn-outline">전체게임</a></p>
-                </div>
+            <div class="col-md-12 col-xs-12">
+                <div class="more-info wish-list" th:if="${#lists.isEmpty(wishList)}">아직 찜한 게임이 없습니다.</div>
 
-                <div class="col-md-4 text-center animate-box fadeInUp animated-fast" th:each="game: ${wishList}">
+                <div class="col-md-4 col-xs-4 text-center animate-box fadeInUp animated-fast" th:each="game: ${wishList}">
                     <div class="product">
                         <a th:href="'/games/'+${game.id}" class="icon">
                             <div class="product-grid" th:style="'background-image:url('+${game.img}+');'">

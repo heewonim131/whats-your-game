@@ -1872,7 +1872,7 @@ button.ghost {
 }
 .more-info {
   text-align: center;
-  margin-top: 30px;
+  margin: 50px 0 100px 0;
 }
 .row-mypage {
   margin-top: 80px !important;
@@ -2032,4 +2032,7 @@ button.search-btn {
 }
 .desc h5 {
   text-align: center;
+}
+footer {
+  margin-top: 100px;
 }

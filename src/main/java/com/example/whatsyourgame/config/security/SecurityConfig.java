@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -33,34 +32,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().disable();
 
         http
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
-
-        http
-                .authorizeRequests(request->
-                                request
-                                        .antMatchers("/", "/css/**", "/fonts/**", "/images/**", "/js/**",
-                                                "/sass/**", "/resources/**", "/error", "/profile").permitAll()
-                                        .antMatchers("/users", "/users/emailDuplicateCheck",
-                                                "/users/login", "/users/login-error").permitAll()
-                                        .antMatchers("/games/**", "/reviews").permitAll()
-                                        .antMatchers("/users/mypage").hasRole("USER")
+                .authorizeRequests(request ->
+                        request
+                                .antMatchers("/", "/css/**", "/fonts/**", "/images/**", "/js/**",
+                                        "/sass/**", "/resources/**", "/error", "/profile").permitAll()
+                                .antMatchers("/users", "/users/emailDuplicateCheck",
+                                        "/users/login", "/users/login-error").permitAll()
+                                .antMatchers("/games/**", "/reviews").permitAll()
+                                .antMatchers("/users/mypage").hasRole("USER")
                                 .anyRequest().authenticated()
                 )
-                .formLogin(login->
+                .formLogin(login ->
                         login.loginPage("/users")
                                 .loginProcessingUrl("/users/login")
                                 .defaultSuccessUrl("/", false)
                                 .failureUrl("/users/login-error")
                 )
-                .logout(logout->
+                .logout(logout ->
                         logout.logoutUrl("/users/logout")
                                 .logoutSuccessUrl("/")
+                                .invalidateHttpSession(true)
                 )
-                .exceptionHandling(error->
+                .exceptionHandling(error ->
                         error.accessDeniedPage("/users")
                 )
-                .oauth2Login(oauth->
+                .oauth2Login(oauth ->
                         oauth.userInfoEndpoint()
                                 .userService(customOAuth2UserService)
                 )

@@ -33,9 +33,8 @@ public class ReviewService {
     }
 
     // 리뷰 작성자 중복 확인
-    public int reviewDuplicateCheck(Long gameId, Long userId) {
-        if (reviewRepository.findReviewByGameIdAndUserId(gameId, userId).isEmpty()) return 1;
-        else return 0;
+    public boolean reviewDuplicateCheck(Long gameId, Long userId) {
+        return reviewRepository.findReviewByGameIdAndUserId(gameId, userId).isEmpty();
     }
 
     // 리뷰 최근 작성순으로 출력
@@ -43,17 +42,15 @@ public class ReviewService {
         return reviewRepository.findReviewsByGameIdOrderByCreatedAtDesc(gameId);
     }
 
-    public Long update(Review review, Review reviewReq) {
+    public void update(Review review, Review reviewReq) {
         review.update(reviewReq.getScore(), reviewReq.getContent());
-        return review.getId();
     }
 
     public void delete(Review review) {
         reviewRepository.delete(review);
     }
 
-    public Long updateLikeCnt(Review review, int likeCnt) {
+    public void updateLikeCnt(Review review, int likeCnt) {
         review.updateLikeCnt(review.getLikeCnt() + likeCnt);
-        return review.getId();
     }
 }

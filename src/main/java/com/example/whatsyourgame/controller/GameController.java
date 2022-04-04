@@ -16,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -45,15 +44,13 @@ public class GameController {
 
     @GetMapping("{gameId}")
     public String gameDetails(@PathVariable Long gameId, Model model) {
-        Optional<User> user = userService.currentLoginUser();
-        model.addAttribute("user", user.orElse(null));
         Game game = gameService.findById(gameId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게임이 존재하지 않습니다. id="+gameId));
         model.addAttribute("game", game);
         List<Review> reviewList = reviewService.findReviewsByGameId(gameId);
         model.addAttribute("reviewList", reviewList);
-        Boolean isWished = false;
-        if (user.isPresent()) isWished = wishService.findWishByUserIdAndGameId(user.get().getId(), gameId).isPresent();
+        boolean isWished = false;
+        if (userService.currentLoginUser().isPresent()) isWished = wishService.findWishByUserIdAndGameId(userService.currentLoginUser().get().getId(), gameId).isPresent();
         model.addAttribute("isWished", isWished);
         return "game-details";
     }
