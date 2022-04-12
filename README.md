@@ -1,11 +1,12 @@
 # 🎮 왓유게: What's your game?
 >### 당신의 게임은 무엇인가요?  
 >새로운 게임을 시작하고 싶지만, 어떤 게임을 해야 할지 모르는 사람들을 위한 게임 리뷰 공간 🎁  
+>http://whatsyg.com
 
 </br>
 
 ## 1. 제작 기간 & 참여 인원
-- 2022.02.03 ~ 진행중
+- 2022.02.03 ~ 2022.04.06
 - 개인 프로젝트
 
 </br>
@@ -19,18 +20,22 @@
   - MySQL 8.0
   - Spring Security
   - OAuth2.0
+#### `배포`
+  - AWS EC2, RDS
+  - Travis CI, AWS S3, CodeDeploy
+  - Nginx
 
 </br>
 
 ## 3. ERD 설계
-![erd](https://user-images.githubusercontent.com/92259017/156757293-3304e017-57e6-43f1-8fbf-67afcb8caf97.png)
+![erd](https://user-images.githubusercontent.com/92259017/162871014-868072b6-0ce6-4b7b-b49e-8f78f72695ae.png)
 
 </br>
 
 ## 4. 구현 기능
 - 회원가입, 로그인, 소셜 로그인
 - 리뷰 등록, 수정, 삭제, 추천
-- 게임 찜하기 **`🚩진행중`**
+- 게임 찜하기
 
 </br>
 
@@ -50,44 +55,44 @@
 ![image](https://user-images.githubusercontent.com/92259017/156873527-466abdae-ae0d-4b6a-9207-7baa0a7976ad.png)
   
 ### 5.2. 사용자 요청
-![image](https://user-images.githubusercontent.com/92259017/156873543-b8a35033-d890-4e11-9118-cfeb9a19998b.png)
-- **입력 체크** :pushpin: [코드 확인](https://github.com/heewonim131/whats-your-game/blob/f90a332cacbd0d7f2a9de15d7f3cdf25d9190a14/src/main/resources/templates/game-details.html#L187)
+  ![image](https://user-images.githubusercontent.com/92259017/162882567-99cb2aa0-c5a6-462f-a1e1-d8cca77b59b6.png)
+- **입력 체크** :pushpin: [코드 확인](https://github.com/heewonim131/whats-your-game/blob/07407a6819c6e70f7ebc65736e6491b9c186c6a0/src/main/resources/templates/game-details.html#L234)
   - 사용자가 작성한 리뷰를 등록하기 전에 별점과 내용이 입력되었는지 확인합니다.
   
-- **Ajax 비동기 요청** :pushpin: [코드 확인](https://github.com/heewonim131/whats-your-game/blob/f90a332cacbd0d7f2a9de15d7f3cdf25d9190a14/src/main/resources/templates/game-details.html#L196)
+- **Ajax 비동기 요청** :pushpin: [코드 확인](https://github.com/heewonim131/whats-your-game/blob/07407a6819c6e70f7ebc65736e6491b9c186c6a0/src/main/resources/templates/game-details.html#L244)
   - 사용자는 한 게임에 리뷰를 하나만 작성할 수 있으므로 리뷰 작성 여부를 확인하는 요청을 보내고,  
   성공적으로 처리되었을 경우 리뷰를 등록하는 POST 요청을 비동기로 날립니다.
 
 ### 5.3. Controller
-![image](https://user-images.githubusercontent.com/92259017/156873555-debe5b34-e454-448f-9c89-de79f08efa8f.png)
+![image](https://user-images.githubusercontent.com/92259017/162882621-0ef3add0-b694-4cf0-bcdd-5031faea99a6.png)
   
-- **요청 처리, 결과 응답** :pushpin: [코드 확인](https://github.com/heewonim131/whats-your-game/blob/f90a332cacbd0d7f2a9de15d7f3cdf25d9190a14/src/main/java/com/example/whatsyourgame/controller/ReviewController.java#L24)
+- **요청 처리, 결과 응답** :pushpin: [코드 확인](https://github.com/heewonim131/whats-your-game/blob/07407a6819c6e70f7ebc65736e6491b9c186c6a0/src/main/java/com/example/whatsyourgame/controller/ReviewController.java#L31)
   - Controller에서는 화면단에서 넘어온 요청을 받고, Service 계층에 로직 처리를 위임합니다.
   - Service 계층에서 넘어온 로직 처리 결과를 화면단에 응답해줍니다.
 
 ### 5.4. Service
-![image](https://user-images.githubusercontent.com/92259017/156873561-c3950769-baf4-42b2-9d28-41dc40a9b730.png)
+![image](https://user-images.githubusercontent.com/92259017/162882650-f98b2c30-f2ef-490f-a643-02c273f1ed87.png)
   
-- **리뷰 작성 여부 확인** :pushpin: [코드 확인](https://github.com/heewonim131/whats-your-game/blob/f90a332cacbd0d7f2a9de15d7f3cdf25d9190a14/src/main/java/com/example/whatsyourgame/service/ReviewService.java#L31)
+- **리뷰 작성 여부 확인** :pushpin: [코드 확인](https://github.com/heewonim131/whats-your-game/blob/07407a6819c6e70f7ebc65736e6491b9c186c6a0/src/main/java/com/example/whatsyourgame/service/ReviewService.java#L36)
   - 요청 시 전달받은 game_id와 user_id를 조건으로 하여 Review를 조회하고,  
   기존 등록된 리뷰 여부에 따라 로직 처리 결과를 전달합니다.
 
-- **리뷰 등록 처리** :pushpin: [코드 확인](https://github.com/heewonim131/whats-your-game/blob/f90a332cacbd0d7f2a9de15d7f3cdf25d9190a14/src/main/java/com/example/whatsyourgame/service/ReviewService.java#L24)
+- **리뷰 등록 처리** :pushpin: [코드 확인](https://github.com/heewonim131/whats-your-game/blob/07407a6819c6e70f7ebc65736e6491b9c186c6a0/src/main/java/com/example/whatsyourgame/service/ReviewService.java#L28)
   - 추천수, created_at, updated_at 등의 기본값을 설정해주고 리뷰를 등록합니다.
 
-![image](https://user-images.githubusercontent.com/92259017/156873574-5447d722-8538-4e41-88f9-3257a7974e0d.png)
+![image](https://user-images.githubusercontent.com/92259017/162882677-a130abb9-a863-4093-ae9f-a3a125dd5a6a.png)
 
-- **리뷰 수정** :pushpin: [코드 확인](https://github.com/heewonim131/whats-your-game/blob/f90a332cacbd0d7f2a9de15d7f3cdf25d9190a14/src/main/java/com/example/whatsyourgame/service/ReviewService.java#L42)
+- **리뷰 수정** :pushpin: [코드 확인](https://github.com/heewonim131/whats-your-game/blob/07407a6819c6e70f7ebc65736e6491b9c186c6a0/src/main/java/com/example/whatsyourgame/entity/Review.java#L49)
   - DB에 update 쿼리를 날리지 않고, Entity에 구현한 update 메서드를 호출하여 객체의 값을 변경합니다.
 
 ### 5.5. Repository
-![image](https://user-images.githubusercontent.com/92259017/156873626-1299add2-4c1f-4651-be65-d1d8098781bd.png)
+![image](https://user-images.githubusercontent.com/92259017/162882706-09dddce4-73ba-4d82-b5cc-e54acda5fbf7.png)
   
-- **리뷰 저장** :pushpin: [코드 확인](https://github.com/heewonim131/whats-your-game/blob/f90a332cacbd0d7f2a9de15d7f3cdf25d9190a14/src/main/java/com/example/whatsyourgame/service/ReviewService.java#L28)
+- **리뷰 저장** :pushpin: [코드 확인](https://github.com/heewonim131/whats-your-game/blob/07407a6819c6e70f7ebc65736e6491b9c186c6a0/src/main/java/com/example/whatsyourgame/service/ReviewService.java#L32)
   - 작성 여부가 확인된 리뷰는 DB에 저장합니다.
   - 저장된 리뷰는 다시 Repository - Service - Controller를 거쳐 화면단에 송출됩니다.
 
-- 기본적인 CRUD 기능은 Spring Data JPA를 활용하여 처리합니다.:pushpin: [코드 확인](https://github.com/heewonim131/whats-your-game/blob/f90a332cacbd0d7f2a9de15d7f3cdf25d9190a14/src/main/java/com/example/whatsyourgame/repository/ReviewRepository.java#L11)
+- 기본적인 CRUD 기능은 Spring Data JPA를 활용하여 처리합니다.:pushpin: [코드 확인](https://github.com/heewonim131/whats-your-game/blob/07407a6819c6e70f7ebc65736e6491b9c186c6a0/src/main/java/com/example/whatsyourgame/repository/ReviewRepository.java#L11)
   
 </div>
 </details>
