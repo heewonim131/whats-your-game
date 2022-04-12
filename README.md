@@ -23,7 +23,6 @@
 #### `배포`
   - AWS EC2, RDS
   - Travis CI, AWS S3, CodeDeploy
-  - Nginx
 
 </br>
 
