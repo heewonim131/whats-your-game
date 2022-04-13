@@ -12,6 +12,8 @@
 </br>
 
 ## 2. 사용 기술
+#### `Front-end`
+  - Thymeleaf
 #### `Back-end`
   - Java 11
   - Spring Boot 2.6.3
@@ -20,9 +22,8 @@
   - MySQL 8.0
   - Spring Security
   - OAuth2.0
-#### `배포`
-  - AWS EC2, RDS
-  - Travis CI, AWS S3, CodeDeploy
+  - AWS (EC2, RDS, S3, CodeDeploy)
+  - Travis CI
 
 </br>
 
