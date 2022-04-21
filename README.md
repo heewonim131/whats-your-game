@@ -20,8 +20,10 @@
   - Gradle
   - Spring Data JPA
   - MySQL 8.0
+  - Lombok
   - Spring Security
   - OAuth2.0
+#### `Dev-ops`
   - AWS (EC2, RDS, S3, CodeDeploy)
   - Travis CI
 
